@@ -12,6 +12,7 @@ import urllib.request
 API_URL = 'https://triff.tools/api/prices/station/?station_id=%i&type_ids=%s'
 
 DIV = '+--------------------+----------+----------+----------+--------------------+--------------------+'
+LINE = '| {:<18} | {:>8} | {:>8} | {:>8} | {:>18} | {:>18} |'
 
 # from https://www.adam4eve.eu/info_stations.php
 #
@@ -79,7 +80,7 @@ if __name__ == '__main__':
   headers = ('Item', 'Jita', 'Amarr', 'Dodixie', 'Buy from...', 'Sell at...')
 
   print(DIV)
-  print('| {:<18} | {:>8} | {:>8} | {:>8} | {:>18} | {:>18} |'.format(*headers))
+  print(LINE.format(*headers))
   print(DIV)
 
   for item_name, item_id in ORES.items():
@@ -87,7 +88,7 @@ if __name__ == '__main__':
     sell_at = sorted(prices[item_id].values(), key = lambda price: price.sell, reverse = True)[0]
     spread = (sell_at.sell - buy_from.buy) / buy_from.buy
 
-    print('| {:<18} | {:>8} | {:>8} | {:>8} | {:>18} | {:>18} |'.format(
+    print(LINE.format(
       item_name,
       prices[item_id][JITA].sell,
       prices[item_id][AMARR].sell,
