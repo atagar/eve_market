@@ -11,7 +11,7 @@ import urllib.request
 
 API_URL = 'https://triff.tools/api/prices/station/?station_id=%i&type_ids=%s'
 
-DIV = '+--------------------+----------+----------+----------+--------------------+'
+DIV = '+--------------------+----------+----------+----------+--------------------+--------------------+'
 
 # from https://www.adam4eve.eu/info_stations.php
 #
@@ -76,21 +76,24 @@ if __name__ == '__main__':
     for price in get_prices(station_id, items.values()):
       prices.setdefault(price.item, {})[station_id] = price
 
-  headers = ('Item', 'Jita', 'Amarr', 'Dodixie', 'Buy from...')
+  headers = ('Item', 'Jita', 'Amarr', 'Dodixie', 'Buy from...', 'Sell at...')
 
   print(DIV)
-  print('| {:<18} | {:>8} | {:>8} | {:>8} | {:>18} |'.format(*headers))
+  print('| {:<18} | {:>8} | {:>8} | {:>8} | {:>18} | {:>18} |'.format(*headers))
   print(DIV)
 
   for item_name, item_id in ORES.items():
-    cheapest = sorted(prices[item_id].values(), key = lambda price: price.buy)[0]
+    buy_from = sorted(prices[item_id].values(), key = lambda price: price.buy)[0]
+    sell_at = sorted(prices[item_id].values(), key = lambda price: price.sell, reverse = True)[0]
+    spread = (sell_at.sell - buy_from.buy) / buy_from.buy
 
-    print('| {:<18} | {:>8} | {:>8} | {:>8} | {:>18} |'.format(
+    print('| {:<18} | {:>8} | {:>8} | {:>8} | {:>18} | {:>18} |'.format(
       item_name,
       prices[item_id][JITA].sell,
       prices[item_id][AMARR].sell,
       prices[item_id][DODIXIE].sell,
-      '{} @ {}'.format(STATIONS[cheapest.station], cheapest.buy),
+      '{} @ {}'.format(STATIONS[buy_from.station], buy_from.buy),
+      '{} @ {} ({}%)'.format(STATIONS[sell_at.station], sell_at.sell, int(spread * 100)),
     ))
 
   print(DIV)
