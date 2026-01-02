@@ -10,6 +10,7 @@ import urllib.request
 # from https://triff.tools/api/docs/
 
 API_URL = 'https://triff.tools/api/prices/station/?station_id=%i&type_ids=%s'
+STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 
 DIV = '+--------------------+----------+----------+----------+--------------------+--------------------+'
 LINE = '| {:<18} | {:>8} | {:>8} | {:>8} | {:>18} | {:>18} |'
@@ -38,6 +39,27 @@ ORES = collections.OrderedDict((
 
 
 Price = collections.namedtuple('Price', ['item', 'station', 'buy', 'sell'])
+
+ID_TO_ITEM = {}
+
+
+def resolve(item):
+  """
+  Resolve an item identifier to its name.
+  """
+
+  if not os.path.exists(STATIC_TYPES):
+    print('Please downdoad and extract the json from: https://developers.eveonline.com/static-data')
+    sys.exit(1)
+
+  if not ID_TO_ITEM:
+    with open(STATIC_TYPES) as static_file:
+      for line in static_file.readlines():
+        static_json = json.loads(line)
+        item_id, name = static_json['_key'], static_json['name']['en']
+        ID_TO_ITEM[item_id] = name
+
+  return ID_TO_ITEM[item]
 
 
 def get_prices(station, items):
