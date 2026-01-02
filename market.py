@@ -45,49 +45,35 @@ SKILLS = collections.OrderedDict((
   ('Distribution Connections', 3894),
   ('Security Connections', 3895),
 
-  ('Small Railgun Specialization', 11082),
-  ('Small Beam Laser Specialization', 11083),
-  ('Small Autocannon Specialization', 11084),
   ('Small Artillery Specialization', 12201),
-
   ('Medium Artillery Specialization', 12202),
   ('Large Artillery Specialization', 12203),
-  ('Medium Beam Laser Specialization', 12204),
-  ('Large Beam Laser Specialization', 12205),
-  ('Medium Railgun Specialization', 12206),
-  ('Large Railgun Specialization', 12207),
+  ('Capital Artillery Specialization', 41404),
+
+  ('Small Autocannon Specialization', 11084),
   ('Medium Autocannon Specialization', 12208),
   ('Large Autocannon Specialization', 12209),
+  ('Capital Autocannon Specialization', 41403),
+
+  ('Small Beam Laser Specialization', 11083),
+  ('Medium Beam Laser Specialization', 12204),
+  ('Large Beam Laser Specialization', 12205),
+  ('Capital Beam Laser Specialization', 41408),
+
   ('Small Blaster Specialization', 12210),
   ('Medium Blaster Specialization', 12211),
   ('Large Blaster Specialization', 12212),
+  ('Capital Blaster Specialization', 41405),
+
   ('Small Pulse Laser Specialization', 12213),
   ('Medium Pulse Laser Specialization', 12214),
   ('Large Pulse Laser Specialization', 12215),
+  ('Capital Pulse Laser Specialization', 41407),
 
   ('Amarr Drone Specialization', 12484),
   ('Minmatar Drone Specialization', 12485),
   ('Gallente Drone Specialization', 12486),
   ('Caldari Drone Specialization', 12487),
-
-  ('Rocket Specialization', 20209),
-  ('Light Missile Specialization', 20210),
-  ('Heavy Missile Specialization', 20211),
-  ('Cruise Missile Specialization', 20212),
-  ('Torpedo Specialization', 20213),
-  ('Mining Drone Specialization', 22541),
-  ('Heavy Assault Missile Specialization', 25718),
-
-  ('Capital Autocannon Specialization', 41403),
-  ('Capital Artillery Specialization', 41404),
-  ('Capital Blaster Specialization', 41405),
-  ('Capital Railgun Specialization', 41406),
-  ('Capital Pulse Laser Specialization', 41407),
-  ('Capital Beam Laser Specialization', 41408),
-  ('XL Torpedo Specialization', 41409),
-  ('XL Cruise Missile Specialization', 41410),
-
-  ('Ice Harvesting Drone Specialization', 43703),
 
   ('Small Disintegrator Specialization', 47873),
   ('Medium Disintegrator Specialization', 47874),
@@ -96,9 +82,6 @@ SKILLS = collections.OrderedDict((
   ('Small Vorton Specialization', 54827),
   ('Medium Vorton Specialization', 54828),
   ('Large Vorton Specialization', 54829),
-
-  ('Salvage Drone Specialization', 57164),
-  ('Mutated Drone Specialization', 60515),
 ))
 
 
