@@ -12,8 +12,8 @@ import urllib.request
 API_URL = 'https://triff.tools/api/prices/station/?station_id=%i&type_ids=%s'
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 
-DIV = '+--------------------+----------+----------+----------+--------------------+--------------------+'
-LINE = '| {:<18} | {:>8} | {:>8} | {:>8} | {:>18} | {:>18} |'
+DIV = '+------------------------------+--------------------+--------------------+--------------------+------------------------------+------------------------------+'
+LINE = '| {:<28} | {:>18} | {:>18} | {:>18} | {:>28} | {:>28} |'
 
 # from https://www.adam4eve.eu/info_stations.php
 #
@@ -35,6 +35,13 @@ STATIONS = collections.OrderedDict((
 
 ORES = collections.OrderedDict((
   ('Tritanium', 34),
+))
+
+
+SKILLS = collections.OrderedDict((
+  ('Mining Connections', 3893),
+  ('Distribution Connections', 3894),
+  ('Security Connections', 3895),
 ))
 
 
@@ -86,14 +93,14 @@ def get_prices(station, items):
     yield Price(
       int(item['type_id']),
       int(item['station_id']),
-      float(item['buy_max']),
-      float(item['sell_min']),
+      float(item['buy_max']) if item['buy_max'] else 0.0,
+      float(item['sell_min']) if item['sell_min'] else 0.0,
     )
 
 
 if __name__ == '__main__':
   prices = {}  # {item => {station => price}}
-  items = ORES
+  items = SKILLS
 
   for station_id in STATIONS.keys():
     for price in get_prices(station_id, items.values()):
@@ -105,10 +112,14 @@ if __name__ == '__main__':
   print(LINE.format(*headers))
   print(DIV)
 
-  for item_name, item_id in ORES.items():
+  for item_name, item_id in items.items():
     buy_from = sorted(prices[item_id].values(), key = lambda price: price.buy)[0]
     sell_at = sorted(prices[item_id].values(), key = lambda price: price.sell, reverse = True)[0]
-    spread = (sell_at.sell - buy_from.buy) / buy_from.buy
+
+    if sell_at.sell and buy_from.buy:
+      spread = '{}%'.format(int((sell_at.sell - buy_from.buy) / buy_from.buy * 100))
+    else:
+      spread = 'N/A'
 
     print(LINE.format(
       item_name,
@@ -116,7 +127,7 @@ if __name__ == '__main__':
       prices[item_id][AMARR].sell,
       prices[item_id][DODIXIE].sell,
       '{} @ {}'.format(STATIONS[buy_from.station], buy_from.buy),
-      '{} @ {} ({}%)'.format(STATIONS[sell_at.station], sell_at.sell, int(spread * 100)),
+      '{} @ {} ({})'.format(STATIONS[sell_at.station], sell_at.sell, spread),
     ))
 
   print(DIV)
