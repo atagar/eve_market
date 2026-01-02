@@ -133,8 +133,8 @@ def get_prices(station, items):
     yield Price(
       int(item['type_id']),
       int(item['station_id']),
-      float(item['buy_max']) if item['buy_max'] else 0.0,
-      float(item['sell_min']) if item['sell_min'] else 0.0,
+      int(item['buy_max']) if item['buy_max'] else 0,
+      int(item['sell_min']) if item['sell_min'] else 0,
     )
 
 
@@ -163,11 +163,11 @@ if __name__ == '__main__':
 
     print(LINE.format(
       item_name,
-      prices[item_id][JITA].sell,
-      prices[item_id][AMARR].sell,
-      prices[item_id][DODIXIE].sell,
-      '{} @ {}'.format(STATIONS[buy_from.station], buy_from.buy),
-      '{} @ {} ({})'.format(STATIONS[sell_at.station], sell_at.sell, spread),
+      '{:,}'.format(prices[item_id][JITA].sell),
+      '{:,}'.format(prices[item_id][AMARR].sell),
+      '{:,}'.format(prices[item_id][DODIXIE].sell),
+      '{} @ {:,}'.format(STATIONS[buy_from.station], buy_from.buy),
+      '{} @ {:,} ({})'.format(STATIONS[sell_at.station], sell_at.sell, spread),
     ))
 
   print(DIV)
