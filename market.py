@@ -5,11 +5,10 @@ import json
 import os
 import sys
 
-import urllib.request
+import util
 
 # from https://triff.tools/api/docs/
 
-API_URL = 'https://triff.tools/api/prices/station/?station_id=%i&type_ids=%s'
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 
 DIV = '+----------------------------------------+--------------------+--------------------+--------------------+------------------------------+------------------------------+'
@@ -84,9 +83,6 @@ SKILLS = collections.OrderedDict((
   ('Large Vorton Specialization', 54829),
 ))
 
-
-Price = collections.namedtuple('Price', ['item', 'station', 'buy', 'sell'])
-
 ID_TO_ITEM = {}
 
 
@@ -109,41 +105,12 @@ def resolve(item):
   return ID_TO_ITEM[item]
 
 
-def get_prices(station, items):
-  url = API_URL % (station, ','.join(map(str, items)))
-  cache_path = os.path.join('cache', '{}:{}'.format(station, hash('-'.join(map(str, items)))))
-
-  if os.path.exists(cache_path):
-    with open(cache_path) as cache_file:
-      prices_json = json.loads(cache_file.read())
-  else:
-    if not os.path.exists('cache'):
-      os.makedirs('cache')
-
-    try:
-      prices_json = json.loads(urllib.request.urlopen(url).read())['rows']
-    except:
-      print("Unable to download from '{}': {}".format(url, sys.exc_info()[1]))
-      sys.exit(1)
-
-    with open(cache_path, 'w') as cache_file:
-      cache_file.write(json.dumps(prices_json, indent = 2))
-
-  for item in prices_json:
-    yield Price(
-      int(item['type_id']),
-      int(item['station_id']),
-      int(item['buy_max']) if item['buy_max'] else 0,
-      int(item['sell_min']) if item['sell_min'] else 0,
-    )
-
-
 if __name__ == '__main__':
   prices = {}  # {item => {station => price}}
   items = SKILLS
 
   for station_id in STATIONS.keys():
-    for price in get_prices(station_id, items.values()):
+    for price in util.get_prices(station_id, items.values()):
       prices.setdefault(price.item, {})[station_id] = price
 
   headers = ('Item', 'Jita', 'Amarr', 'Dodixie', 'Buy from...', 'Sell at...')
