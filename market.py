@@ -2,6 +2,7 @@
 
 import collections
 import json
+import math
 import os
 import sys
 
@@ -120,20 +121,20 @@ if __name__ == '__main__':
   print(DIV)
 
   for item_name, item_id in items.items():
-    buy_from = sorted(prices[item_id].values(), key = lambda price: price.buy)[0]
-    sell_at = sorted(prices[item_id].values(), key = lambda price: price.sell, reverse = True)[0]
+    buy_from = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else math.inf)[0]
+    sell_at = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else -1, reverse = True)[0]
 
-    if sell_at.sell and buy_from.buy:
-      spread = '{}%'.format(int((sell_at.sell - buy_from.buy) / buy_from.buy * 100))
+    if sell_at.sell and buy_from.sell:
+      spread = '{}%'.format(int((sell_at.sell - buy_from.sell) / buy_from.sell * 100))
     else:
       spread = 'N/A'
 
     print(LINE.format(
       item_name,
-      '{:,}'.format(prices[item_id][JITA].sell),
-      '{:,}'.format(prices[item_id][AMARR].sell),
-      '{:,}'.format(prices[item_id][DODIXIE].sell),
-      '{} @ {:,}'.format(STATIONS[buy_from.station], buy_from.buy),
+      '{:,}'.format(prices[item_id][JITA].sell) if prices[item_id][JITA].sell else 'N/A',
+      '{:,}'.format(prices[item_id][AMARR].sell) if prices[item_id][AMARR].sell else 'N/A',
+      '{:,}'.format(prices[item_id][DODIXIE].sell) if prices[item_id][DODIXIE].sell else 'N/A',
+      '{} @ {:,}'.format(STATIONS[buy_from.station], buy_from.sell),
       '{} @ {:,} ({})'.format(STATIONS[sell_at.station], sell_at.sell, spread),
     ))
 

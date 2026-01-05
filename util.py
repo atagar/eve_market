@@ -36,8 +36,8 @@ def get_prices(station, items):
     yield Price(
       int(item['type_id']),
       int(item['station_id']),
-      int(item['buy_max']) if item['buy_max'] else 0,
-      int(item['sell_min']) if item['sell_min'] else 0,
+      int(item['buy_max']) if item['buy_max'] else None,
+      int(item['sell_min']) if item['sell_min'] else None,
     )
 
 
