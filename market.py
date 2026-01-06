@@ -5,6 +5,9 @@ import math
 
 import util
 
+MIN_SELL = 1000000  # minimum sale value for an item to be shown
+MIN_MARGIN = 50  # minimum margin for an item to be shown
+
 DIV = '+{}+'.format('+'.join(['-' * width for width in (40, 20, 20, 20, 30, 30)]))
 LINE = '| {:<38} | {:>18} | {:>18} | {:>18} | {:>28} | {:>28} |'
 
@@ -77,7 +80,7 @@ SKILLS = collections.OrderedDict((
   ('Large Vorton Specialization', 54829),
 ))
 
-# Abyssal filaments that cost at least 1M.
+# High tier abyssal filaments.
 
 FILAMENTS = collections.OrderedDict((
   ('Cataclysmic Dark Filament', 56140),
@@ -102,10 +105,19 @@ FILAMENTS = collections.OrderedDict((
   ('Raging Gamma Filament', 47902),
 ))
 
+# Additional items to consider.
+
+EXTRA = collections.OrderedDict((
+  ('Graviton Physics', 11446),
+  ('High Energy Physics', 11433),
+  ('Hydromagnetic Physics', 11443),
+  ('Quantum Physics', 11455),
+))
+
 
 if __name__ == '__main__':
   prices = {}  # {item => {station => price}}
-  items = FILAMENTS
+  items = SKILLS | FILAMENTS | EXTRA
 
   for station_id in STATIONS.keys():
     for price in util.get_prices(station_id, items.values()):
@@ -117,10 +129,12 @@ if __name__ == '__main__':
     buy_from = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else math.inf)[0]
     sell_at = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else -1, reverse = True)[0]
     margin = int((sell_at.sell - buy_from.sell) / buy_from.sell * 100) if (buy_from.sell and sell_at.sell) else None
+    has_shortage = prices[item_id][JITA].sell is None or prices[item_id][AMARR].sell is None or prices[item_id][DODIXIE].sell is None
 
-    lines.append((item_name, item_id, buy_from, sell_at, margin))
+    if has_shortage or (margin >= MIN_MARGIN and sell_at.sell >= MIN_SELL):
+      lines.append((item_name, item_id, buy_from, sell_at, margin))
 
-  lines.sort(key = lambda entry: entry[4] if entry[4] else math.inf, reverse = True)
+  lines.sort(key = lambda entry: entry[4] if entry[4] is not None else -1, reverse = True)
 
   headers = ('Item', 'Jita', 'Amarr', 'Dodixie', 'Buy from...', 'Sell at...')
 
@@ -135,7 +149,7 @@ if __name__ == '__main__':
       '{:,}'.format(prices[item_id][AMARR].sell) if prices[item_id][AMARR].sell else 'N/A',
       '{:,}'.format(prices[item_id][DODIXIE].sell) if prices[item_id][DODIXIE].sell else 'N/A',
       '{} @ {:,}'.format(STATIONS[buy_from.station], buy_from.sell),
-      '{} @ {:,} ({})'.format(STATIONS[sell_at.station], sell_at.sell, '{}%'.format(margin) if margin else 'N/A'),
+      '{} @ {:,} ({})'.format(STATIONS[sell_at.station], sell_at.sell, '{}%'.format(margin) if margin is not None else 'N/A'),
     ))
 
   print(DIV)
