@@ -105,6 +105,14 @@ FILAMENTS = collections.OrderedDict((
   ('Raging Gamma Filament', 47902),
 ))
 
+FACTION_MODULES = collections.OrderedDict((
+  ('Dread Guristas Drone Damage Amplifier', 33846),
+  ('Federation Navy Drone Damage Amplifier', 33842),
+  ('Imperial Navy Drone Damage Amplifier', 33844),
+  ('Sentient Drone Damage Amplifier', 33848),
+))
+
+
 # Additional items to consider.
 
 EXTRA = collections.OrderedDict((
@@ -117,7 +125,7 @@ EXTRA = collections.OrderedDict((
 
 if __name__ == '__main__':
   prices = {}  # {item => {station => price}}
-  items = SKILLS | FILAMENTS | EXTRA
+  items = SKILLS | FILAMENTS | FACTION_MODULES | EXTRA
 
   for station_id in STATIONS.keys():
     for price in util.get_prices(station_id, items.values()):
