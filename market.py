@@ -77,10 +77,35 @@ SKILLS = collections.OrderedDict((
   ('Large Vorton Specialization', 54829),
 ))
 
+# Abyssal filaments that cost at least 1M.
+
+FILAMENTS = collections.OrderedDict((
+  ('Cataclysmic Dark Filament', 56140),
+  ('Cataclysmic Electrical Filament', 56139),
+  ('Cataclysmic Exotic Filament', 56141),
+  ('Cataclysmic Firestorm Filament', 56142),
+  ('Cataclysmic Gamma Filament', 56143),
+  ('Chaotic Dark Filament', 47895),
+  ('Chaotic Electrical Filament', 47907),
+  ('Chaotic Exotic Filament', 47891),
+  ('Chaotic Firestorm Filament', 47899),
+  ('Chaotic Gamma Filament', 47903),
+  ('Fierce Dark Filament', 47893),
+  ('Fierce Electrical Filament', 47905),
+  ('Fierce Exotic Filament', 47889),
+  ('Fierce Firestorm Filament', 47897),
+  ('Fierce Gamma Filament', 47901),
+  ('Raging Dark Filament', 47894),
+  ('Raging Electrical Filament', 47906),
+  ('Raging Exotic Filament', 47890),
+  ('Raging Firestorm Filament', 47898),
+  ('Raging Gamma Filament', 47902),
+))
+
 
 if __name__ == '__main__':
   prices = {}  # {item => {station => price}}
-  items = SKILLS
+  items = FILAMENTS
 
   for station_id in STATIONS.keys():
     for price in util.get_prices(station_id, items.values()):
