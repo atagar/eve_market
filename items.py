@@ -96,6 +96,8 @@ if __name__ == '__main__':
       if (args.name and args.name in name) or args.item_id == item_id or args.group_id == group_id:
         matches.append((name, item_id, group_id))
 
+  matches.sort(key = lambda entry: entry[0])
+
   headers = ('Item', 'ID', 'Group ID')
 
   print(DIV)
