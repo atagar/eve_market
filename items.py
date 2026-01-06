@@ -6,8 +6,8 @@ import os
 import json
 import sys
 
-DIV = '+------------------------------------------------------------+----------+----------+'
-LINE = '| {:<58} | {:>8} | {:>8} |'
+DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 10, 10)]))
+LINE = '| {:<68} | {:>8} | {:>8} |'
 
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 
