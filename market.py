@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 
 import collections
-import json
 import math
-import os
-import sys
 
 import util
-
-# from https://triff.tools/api/docs/
-
-STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 
 DIV = '+----------------------------------------+--------------------+--------------------+--------------------+------------------------------+------------------------------+'
 LINE = '| {:<38} | {:>18} | {:>18} | {:>18} | {:>28} | {:>28} |'
@@ -83,27 +76,6 @@ SKILLS = collections.OrderedDict((
   ('Medium Vorton Specialization', 54828),
   ('Large Vorton Specialization', 54829),
 ))
-
-ID_TO_ITEM = {}
-
-
-def resolve(item):
-  """
-  Resolve an item identifier to its name.
-  """
-
-  if not os.path.exists(STATIC_TYPES):
-    print('Please downdoad and extract the json from: https://developers.eveonline.com/static-data')
-    sys.exit(1)
-
-  if not ID_TO_ITEM:
-    with open(STATIC_TYPES) as static_file:
-      for line in static_file.readlines():
-        static_json = json.loads(line)
-        item_id, name = static_json['_key'], static_json['name']['en']
-        ID_TO_ITEM[item_id] = name
-
-  return ID_TO_ITEM[item]
 
 
 if __name__ == '__main__':

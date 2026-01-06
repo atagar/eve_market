@@ -7,6 +7,8 @@ import sys
 
 import urllib.request
 
+# from https://triff.tools/api/docs/
+
 API_URL = 'https://triff.tools/api/prices/station/?station_id=%i&type_ids=%s'
 
 Price = collections.namedtuple('Price', ['item', 'station', 'buy', 'sell'])
