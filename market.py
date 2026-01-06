@@ -114,28 +114,31 @@ if __name__ == '__main__':
     for price in util.get_prices(station_id, items.values()):
       prices.setdefault(price.item, {})[station_id] = price
 
+  lines = []  # list of (item_name, item_id, buy_from, sell_at, margin) tuples
+
+  for item_name, item_id in items.items():
+    buy_from = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else math.inf)[0]
+    sell_at = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else -1, reverse = True)[0]
+    margin = int((sell_at.sell - buy_from.sell) / buy_from.sell * 100) if (buy_from.sell and sell_at.sell) else None
+
+    lines.append((item_name, item_id, buy_from, sell_at, margin))
+
+  lines.sort(key = lambda entry: entry[4] if entry[4] else math.inf, reverse = True)
+
   headers = ('Item', 'Jita', 'Amarr', 'Dodixie', 'Buy from...', 'Sell at...')
 
   print(DIV)
   print(LINE.format(*headers))
   print(DIV)
 
-  for item_name, item_id in items.items():
-    buy_from = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else math.inf)[0]
-    sell_at = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else -1, reverse = True)[0]
-
-    if sell_at.sell and buy_from.sell:
-      spread = '{}%'.format(int((sell_at.sell - buy_from.sell) / buy_from.sell * 100))
-    else:
-      spread = 'N/A'
-
+  for item_name, item_id, buy_from, sell_at, margin in lines:
     print(LINE.format(
       item_name,
       '{:,}'.format(prices[item_id][JITA].sell) if prices[item_id][JITA].sell else 'N/A',
       '{:,}'.format(prices[item_id][AMARR].sell) if prices[item_id][AMARR].sell else 'N/A',
       '{:,}'.format(prices[item_id][DODIXIE].sell) if prices[item_id][DODIXIE].sell else 'N/A',
       '{} @ {:,}'.format(STATIONS[buy_from.station], buy_from.sell),
-      '{} @ {:,} ({})'.format(STATIONS[sell_at.station], sell_at.sell, spread),
+      '{} @ {:,} ({})'.format(STATIONS[sell_at.station], sell_at.sell, '{}%'.format(margin) if margin else 'N/A'),
     ))
 
   print(DIV)
