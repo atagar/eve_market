@@ -119,7 +119,6 @@ FACTION_MODULES = collections.OrderedDict((
   ('Sentient Drone Damage Amplifier', 33848),
 ))
 
-
 # Additional items to consider.
 
 EXTRA = collections.OrderedDict((

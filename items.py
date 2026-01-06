@@ -8,6 +8,7 @@ import sys
 
 DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 10, 10)]))
 LINE = '| {:<68} | {:>8} | {:>8} |'
+TUPLE_LINE = "  ('{}', {}),"
 
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 
@@ -15,6 +16,7 @@ DEFAULT_ARGS = {
   'name': None,
   'item_id': None,
   'group_id': None,
+  'print_tuple': False,
   'print_help': False,
 }
 
@@ -42,7 +44,7 @@ def parse(argv):
   args = dict(DEFAULT_ARGS)
 
   try:
-    recognized_args, unrecognized_args = getopt.getopt(argv, 'h', ['name=', 'id=', 'group=', 'help'])
+    recognized_args, unrecognized_args = getopt.getopt(argv, 'th', ['name=', 'id=', 'group=', 'tuple', 'help'])
 
     if unrecognized_args:
       raise getopt.GetoptError("'%s' aren't recognized arguments" % "', '".join(unrecognized_args))
@@ -62,6 +64,8 @@ def parse(argv):
         raise ValueError("Identifiers must be an integer, not '{}'".format(arg))
 
       args['group_id'] = int(arg)
+    elif opt in ('-t', '--tuple'):
+      args['print_tuple'] = True
     elif opt in ('-h', '--help'):
       args['print_help'] = True
 
@@ -105,7 +109,10 @@ if __name__ == '__main__':
   print(DIV)
 
   for name, item_id, group_id in matches:
-    print(LINE.format(name, item_id, group_id))
+    if args.print_tuple:
+      print(TUPLE_LINE.format(name, item_id))
+    else:
+      print(LINE.format(name, item_id, group_id))
   
   print(DIV)
 
