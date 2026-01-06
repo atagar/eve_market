@@ -29,8 +29,15 @@ STATIONS = collections.OrderedDict((
 
 # from https://www.adam4eve.eu/info_types.php
 
-ORES = collections.OrderedDict((
+MINERALS = collections.OrderedDict((
   ('Tritanium', 34),
+  ('Pyerite', 35),
+  ('Mexallon', 36),
+  ('Isogen', 37),
+  ('Nocxium', 38),
+  ('Zydrine', 39),
+  ('Megacyte', 40),
+  ('Morphite', 11399),
 ))
 
 
@@ -125,7 +132,7 @@ EXTRA = collections.OrderedDict((
 
 if __name__ == '__main__':
   prices = {}  # {item => {station => price}}
-  items = SKILLS | FILAMENTS | FACTION_MODULES | EXTRA
+  items = MINERALS | SKILLS | FILAMENTS | FACTION_MODULES | EXTRA
 
   for station_id in STATIONS.keys():
     for price in util.get_prices(station_id, items.values()):

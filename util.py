@@ -35,11 +35,18 @@ def get_prices(station, items):
       cache_file.write(json.dumps(prices_json, indent = 2))
 
   for item in prices_json:
-    yield Price(
-      int(item['type_id']),
-      int(item['station_id']),
-      int(item['buy_max']) if item['buy_max'] else None,
-      int(item['sell_min']) if item['sell_min'] else None,
-    )
+    if item['buy_max'] is None:
+      buy_price = None
+    elif item['buy_max'].isdigit():
+      buy_price = int(item['buy_max'])
+    else:
+      buy_price = float(item['buy_max'])
 
+    if item['sell_min'] is None:
+      sell_price = None
+    elif item['sell_min'].isdigit():
+      sell_price = int(item['sell_min'])
+    else:
+      sell_price = float(item['sell_min'])
 
+    yield Price(int(item['type_id']), int(item['station_id']), buy_price, sell_price)
