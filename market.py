@@ -27,7 +27,7 @@ STATIONS = collections.OrderedDict((
   (DODIXIE, 'Dodixie'),
 ))
 
-# from https://www.adam4eve.eu/info_types.php
+# Other bulk items to consider: PI
 
 MINERALS = collections.OrderedDict((
   ('Tritanium', 34),
@@ -110,6 +110,122 @@ FILAMENTS = collections.OrderedDict((
   ('Raging Exotic Filament', 47890),
   ('Raging Firestorm Filament', 47898),
   ('Raging Gamma Filament', 47902),
+))
+
+DRONES = collections.OrderedDict((
+  # Amarr
+
+  ("'Augmented' Acolyte", 28264),
+  ("'Integrated' Acolyte", 28262),
+  ('Acolyte EV-300', 23659),
+  ('Acolyte I', 2203),
+  ('Acolyte II', 2205),
+  ('Acolyte TD-300', 23727),
+  ('Imperial Navy Acolyte', 31864),
+
+  ("'Augmented' Infiltrator", 28284),
+  ("'Integrated' Infiltrator", 28282),
+  ('Imperial Navy Infiltrator', 31866),
+  ('Infiltrator EV-600', 23702),
+  ('Infiltrator I', 2173),
+  ('Infiltrator II', 2175),
+  ('Infiltrator TD-600', 23725),
+
+  ("'Augmented' Praetor", 28292),
+  ("'Integrated' Praetor", 28290),
+  ('Imperial Navy Praetor', 31870),
+  ('Praetor EV-900', 22572),
+  ('Praetor I', 2193),
+  ('Praetor II', 2195),
+  ('Praetor TD-900', 23510),
+
+  # Caldari
+
+  ("'Augmented' Hornet", 28280),
+  ("'Integrated' Hornet", 28278),
+  ('Caldari Navy Hornet', 31872),
+  ('Hornet EC-300', 23707),
+  ('Hornet I', 2464),
+  ('Hornet II', 2466),
+
+  ("'Augmented' Vespa", 28300),
+  ("'Integrated' Vespa", 28298),
+  ('Caldari Navy Vespa', 31874),
+  ('Vespa EC-600', 23705),
+  ('Vespa I', 15508),
+  ('Vespa II', 21638),
+
+  ("'Augmented' Wasp", 28308),
+  ("'Integrated' Wasp", 28306),
+  ('Caldari Navy Wasp', 31876),
+  ('Wasp EC-900', 23473),
+  ('Wasp I', 1201),
+  ('Wasp II', 2436),
+
+  # Gallente
+
+  ("'Augmented' Hobgoblin", 28276),
+  ("'Integrated' Hobgoblin", 28274),
+  ('Federation Navy Hobgoblin', 31880),
+  ('Hobgoblin I', 2454),
+  ('Hobgoblin II', 2456),
+  ('Hobgoblin SD-300', 23715),
+
+  ("'Augmented' Hammerhead", 28272),
+  ("'Integrated' Hammerhead", 28270),
+  ('Federation Navy Hammerhead', 31882),
+  ('Hammerhead I', 2183),
+  ('Hammerhead II', 2185),
+  ('Hammerhead SD-600', 23713),
+
+  ("'Augmented' Ogre", 28288),
+  ("'Integrated' Ogre", 28286),
+  ('Federation Navy Ogre', 31884),
+  ('Ogre I', 2444),
+  ('Ogre II', 2446),
+  ('Ogre SD-900', 23506),
+
+  # Minmatar
+
+  ("'Augmented' Warrior", 28304),
+  ("'Integrated' Warrior", 28302),
+  ('Republic Fleet Warrior', 31888),
+  ('Warrior I', 2486),
+  ('Warrior II', 2488),
+  ('Warrior SW-300', 23731),
+  ('Warrior TP-300', 23723),
+
+  ("'Augmented' Valkyrie", 28296),
+  ("'Integrated' Valkyrie", 28294),
+  ('Republic Fleet Valkyrie', 31890),
+  ('Valkyrie I', 15510),
+  ('Valkyrie II', 21640),
+  ('Valkyrie SW-600', 23729),
+  ('Valkyrie TP-600', 23721),
+
+  ("'Augmented' Berserker", 28268),
+  ("'Integrated' Berserker", 28266),
+  ('Berserker I', 2476),
+  ('Berserker II', 2478),
+  ('Berserker SW-900', 23536),
+  ('Berserker TP-900', 23512),
+  ('Republic Fleet Berserker', 31892),
+
+  # Utility
+
+  ("'Augmented' Ice Harvesting Drone", 43701),
+  ("'Augmented' Mining Drone", 43694),
+  ("'Excavator' Ice Harvesting Drone", 43681),
+  ("'Excavator' Mining Drone", 41030),
+  ('Harvester Mining Drone', 3218),
+  ('Ice Harvesting Drone I', 43699),
+  ('Ice Harvesting Drone II', 43700),
+  ('Mining Drone I', 10246),
+  ('Mining Drone II', 10250),
+
+  ("'Dunk' Salvage Drone", 55761),
+  ('Salvage Drone I', 32787),
+  ('Salvage Drone II', 55760),
 ))
 
 FACTION_MODULES = collections.OrderedDict((
@@ -497,7 +613,7 @@ EXTRA = collections.OrderedDict((
 
 if __name__ == '__main__':
   prices = {}  # {item => {station => price}}
-  items = MINERALS | SKILLS | FILAMENTS | FACTION_MODULES | EXTRA
+  items = MINERALS | SKILLS | FILAMENTS | DRONES | FACTION_MODULES | EXTRA
 
   for station_id in STATIONS.keys():
     for price in util.get_prices(station_id, items.values()):
