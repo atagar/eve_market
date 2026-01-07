@@ -34,6 +34,8 @@ def get_prices(station, items):
     with open(cache_path, 'w') as cache_file:
       cache_file.write(json.dumps(prices_json, indent = 2))
 
+  missing_items = list(items)
+
   for item in prices_json:
     if item['buy_max'] is None:
       buy_price = None
@@ -49,4 +51,9 @@ def get_prices(station, items):
     else:
       sell_price = float(item['sell_min'])
 
+    missing_items.remove(int(item['type_id']))
     yield Price(int(item['type_id']), int(item['station_id']), buy_price, sell_price)
+
+  if missing_items:
+    for item_id in missing_items:
+      yield Price(item_id, station, None, None)
