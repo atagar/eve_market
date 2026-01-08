@@ -48,43 +48,43 @@ SKILLS = collections.OrderedDict((
   ('Distribution Connections', 3894),
   ('Security Connections', 3895),
 
-  ('Small Artillery Specialization', 12201),
-  ('Medium Artillery Specialization', 12202),
+  ('Small Artillery Specialization', 12201),  # Amarr sells 0.5/day @ 2M
+  ('Medium Artillery Specialization', 12202),  # Amarr sells 1/day @ shortage
   ('Large Artillery Specialization', 12203),
   ('Capital Artillery Specialization', 41404),
 
-  ('Small Autocannon Specialization', 11084),
-  ('Medium Autocannon Specialization', 12208),
+  ('Small Autocannon Specialization', 11084),  # Dodixie sells 1/day @ 2M
+  ('Medium Autocannon Specialization', 12208),  # Dodixie sells 0.3/day @ shortage
   ('Large Autocannon Specialization', 12209),
   ('Capital Autocannon Specialization', 41403),
 
-  ('Small Beam Laser Specialization', 11083),
+  ('Small Beam Laser Specialization', 11083),  # Dodixie sells 0.5/day @ 3M
   ('Medium Beam Laser Specialization', 12204),
-  ('Large Beam Laser Specialization', 12205),
+  ('Large Beam Laser Specialization', 12205),  # Dodixie sells 1/week @ shortage
   ('Capital Beam Laser Specialization', 41408),
 
-  ('Small Blaster Specialization', 12210),
-  ('Medium Blaster Specialization', 12211),
-  ('Large Blaster Specialization', 12212),
+  ('Small Blaster Specialization', 12210),  # Amarr sells 1/day @ 3M
+  ('Medium Blaster Specialization', 12211),  # Amarr sells 2/day @ 4M
+  ('Large Blaster Specialization', 12212),  # Amarr sells 1/day @ 10M
   ('Capital Blaster Specialization', 41405),
 
-  ('Small Pulse Laser Specialization', 12213),
-  ('Medium Pulse Laser Specialization', 12214),
+  ('Small Pulse Laser Specialization', 12213),  # Dodixie sells 0.5/day @ 3M
+  ('Medium Pulse Laser Specialization', 12214),  # Dodixie sells 0.5/day @ 6M
   ('Large Pulse Laser Specialization', 12215),
   ('Capital Pulse Laser Specialization', 41407),
 
   ('Amarr Drone Specialization', 12484),
-  ('Minmatar Drone Specialization', 12485),
-  ('Gallente Drone Specialization', 12486),
-  ('Caldari Drone Specialization', 12487),
+  ('Minmatar Drone Specialization', 12485),  # Dodixie sells 2/day @ 7M
+  ('Gallente Drone Specialization', 12486),  # Amarr sells 5/day @ 5M
+  ('Caldari Drone Specialization', 12487),  # Dodixie sells 3/day @ 3M
 
-  ('Small Disintegrator Specialization', 47873),
-  ('Medium Disintegrator Specialization', 47874),
-  ('Large Disintegrator Specialization', 47875),
+  ('Small Disintegrator Specialization', 47873),  # Dodixie sells 2/day @ 4M
+  ('Medium Disintegrator Specialization', 47874),  # Dodixie sells 2/day @ 6M
+  ('Large Disintegrator Specialization', 47875),  # Amarr sells 2/day @ 272M
 
   ('Small Vorton Specialization', 54827),
-  ('Medium Vorton Specialization', 54828),
-  ('Large Vorton Specialization', 54829),
+  ('Medium Vorton Specialization', 54828),  # Amarr sells 2/day @ 45M
+  ('Large Vorton Specialization', 54829),  # Amarr sells 1/day @ 81M
 ))
 
 # High tier abyssal filaments.
@@ -116,14 +116,14 @@ DRONES = collections.OrderedDict((
   # Amarr
 
   ("'Augmented' Acolyte", 28264),
-  ("'Integrated' Acolyte", 28262),
+  ("'Integrated' Acolyte", 28262),  # Amarr sells 40/day @ 1M
   ('Acolyte EV-300', 23659),
   ('Acolyte I', 2203),
   ('Acolyte II', 2205),
   ('Acolyte TD-300', 23727),
   ('Imperial Navy Acolyte', 31864),
 
-  ("'Augmented' Infiltrator", 28284),
+  #("'Augmented' Infiltrator", 28284),  # low volume
   ("'Integrated' Infiltrator", 28282),
   ('Imperial Navy Infiltrator', 31866),
   ('Infiltrator EV-600', 23702),
@@ -132,7 +132,7 @@ DRONES = collections.OrderedDict((
   ('Infiltrator TD-600', 23725),
 
   ("'Augmented' Praetor", 28292),
-  ("'Integrated' Praetor", 28290),
+  ("'Integrated' Praetor", 28290),  # Dodixie sells 1/day @ 2M
   ('Imperial Navy Praetor', 31870),
   ('Praetor EV-900', 22572),
   ('Praetor I', 2193),
@@ -141,7 +141,7 @@ DRONES = collections.OrderedDict((
 
   # Caldari
 
-  ("'Augmented' Hornet", 28280),
+  ("'Augmented' Hornet", 28280),  # Amarr sells 10/day @ 9M
   ("'Integrated' Hornet", 28278),
   ('Caldari Navy Hornet', 31872),
   ('Hornet EC-300', 23707),
@@ -149,14 +149,14 @@ DRONES = collections.OrderedDict((
   ('Hornet II', 2466),
 
   ("'Augmented' Vespa", 28300),
-  ("'Integrated' Vespa", 28298),
+  ("'Integrated' Vespa", 28298),  # Dodixie sells 3/day @ 2M
   ('Caldari Navy Vespa', 31874),
   ('Vespa EC-600', 23705),
   ('Vespa I', 15508),
   ('Vespa II', 21638),
 
   ("'Augmented' Wasp", 28308),
-  ("'Integrated' Wasp", 28306),
+  ("'Integrated' Wasp", 28306),  # Dodixie sells 1/day @ 2M
   ('Caldari Navy Wasp', 31876),
   ('Wasp EC-900', 23473),
   ('Wasp I', 1201),
@@ -176,10 +176,10 @@ DRONES = collections.OrderedDict((
   ('Federation Navy Hammerhead', 31882),
   ('Hammerhead I', 2183),
   ('Hammerhead II', 2185),
-  ('Hammerhead SD-600', 23713),
+  #('Hammerhead SD-600', 23713),  # low volume
 
   ("'Augmented' Ogre", 28288),
-  ("'Integrated' Ogre", 28286),
+  ("'Integrated' Ogre", 28286),  # Dodixie sells 2/day @ 2M
   ('Federation Navy Ogre', 31884),
   ('Ogre I', 2444),
   ('Ogre II', 2446),
@@ -203,8 +203,8 @@ DRONES = collections.OrderedDict((
   ('Valkyrie SW-600', 23729),
   ('Valkyrie TP-600', 23721),
 
-  ("'Augmented' Berserker", 28268),
-  ("'Integrated' Berserker", 28266),
+  #("'Augmented' Berserker", 28268),  # low volume
+  ("'Integrated' Berserker", 28266),  # Dodixie sells 1/day @ 1M
   ('Berserker I', 2476),
   ('Berserker II', 2478),
   ('Berserker SW-900', 23536),
@@ -376,7 +376,7 @@ FACTION_MODULES = collections.OrderedDict((
   ('Pithum A-Type Thermal Shield Amplifier', 19227),
 
   ('Centii B-Type EM Coating', 18750),
-  ('Centii B-Type Explosive Coating', 18746),
+  #('Centii B-Type Explosive Coating', 18746),  # low volume
   ('Centii B-Type Kinetic Coating', 18742),
   ('Centii B-Type Multispectrum Coating', 18706),
   ('Centii B-Type Small Armor Repairer', 19007),
@@ -463,11 +463,11 @@ FACTION_MODULES = collections.OrderedDict((
   ('Gistum B-Type 50MN Microwarpdrive', 19345),
   ('Gistum B-Type EM Shield Amplifier', 19247),
   ('Gistum B-Type Explosive Shield Amplifier', 19235),
-  ('Gistum B-Type Kinetic Shield Amplifier', 19243),
+  #('Gistum B-Type Kinetic Shield Amplifier', 19243),  # low volume
   ('Gistum B-Type Medium Remote Shield Booster', 19143),
   ('Gistum B-Type Medium Shield Booster', 19183),
   ('Gistum B-Type Multispectrum Shield Hardener', 4345),
-  ('Gistum B-Type Thermal Shield Amplifier', 19239),
+  #('Gistum B-Type Thermal Shield Amplifier', 19239),  # low volume
   ('Pith B-Type EM Shield Hardener', 19266),
   ('Pith B-Type Explosive Shield Hardener', 19270),
   ('Pith B-Type Kinetic Shield Hardener', 19272),
@@ -487,7 +487,7 @@ FACTION_MODULES = collections.OrderedDict((
 
   ('Centii C-Type EM Coating', 18722),
   ('Centii C-Type Explosive Coating', 18718),
-  ('Centii C-Type Kinetic Coating', 18714),
+  #('Centii C-Type Kinetic Coating', 18714),  # low volume
   ('Centii C-Type Multispectrum Coating', 18702),
   ('Centii C-Type Small Armor Repairer', 19005),
   ('Centii C-Type Small Remote Armor Repairer', 19047),
@@ -524,7 +524,7 @@ FACTION_MODULES = collections.OrderedDict((
   ('Coreli C-Type Thermal Coating', 18777),
   ('Corelum C-Type 10MN Afterburner', 18682),
   ('Corelum C-Type 50MN Microwarpdrive', 19315),
-  ('Corelum C-Type EM Energized Membrane', 18805),
+  #('Corelum C-Type EM Energized Membrane', 18805),  # low volume
   ('Corelum C-Type Explosive Energized Membrane', 18803),
   ('Corelum C-Type Kinetic Energized Membrane', 18801),
   ('Corelum C-Type Medium Armor Repairer', 19029),
@@ -538,9 +538,9 @@ FACTION_MODULES = collections.OrderedDict((
   ('Corpii C-Type Small Armor Repairer', 18999),
   ('Corpii C-Type Small Energy Neutralizer', 37622),
   ('Corpii C-Type Small Energy Nosferatu', 19101),
-  ('Corpii C-Type Small Remote Capacitor Transmitter', 19065),
+  #('Corpii C-Type Small Remote Capacitor Transmitter', 19065),  # low volume
   ('Corpii C-Type Thermal Coating', 18724),
-  ('Corpum C-Type EM Energized Membrane', 18841),
+  #('Corpum C-Type EM Energized Membrane', 18841),  # low volume
   ('Corpum C-Type Explosive Energized Membrane', 18837),
   ('Corpum C-Type Kinetic Energized Membrane', 18833),
   ('Corpum C-Type Medium Armor Repairer', 19017),
@@ -589,11 +589,11 @@ FACTION_MODULES = collections.OrderedDict((
   ('Pithi C-Type Small Shield Booster', 19175),
   ('Pithum C-Type EM Shield Amplifier', 19215),
   ('Pithum C-Type Explosive Shield Amplifier', 19209),
-  ('Pithum C-Type Kinetic Shield Amplifier', 19213),
+  #('Pithum C-Type Kinetic Shield Amplifier', 19213),  # low volume
   ('Pithum C-Type Medium Remote Shield Booster', 19147),
   ('Pithum C-Type Medium Shield Booster', 19187),
   ('Pithum C-Type Multispectrum Shield Hardener', 4349),
-  ('Pithum C-Type Thermal Shield Amplifier', 19211),
+  ('Pithum C-Type Thermal Shield Amplifier', 19211),  # Dodixie sells 1/day @ 4M
 
   ('Dread Guristas Drone Damage Amplifier', 33846),
   ('Federation Navy Drone Damage Amplifier', 33842),
@@ -605,12 +605,12 @@ IMPLANTS = collections.OrderedDict((
   ('Cybernetic Subprocessor - Basic', 9943),
   ('Cybernetic Subprocessor - Improved', 10222),
   ('Cybernetic Subprocessor - Standard', 10221),
-  ('Limited Cybernetic Subprocessor', 13287),
+  ('Limited Cybernetic Subprocessor', 13287),  # Amarr sells 2/day @ 4M
   ('Limited Cybernetic Subprocessor - Beta', 14298),
   ('Limited Memory Augmentation', 13284),
   ('Limited Memory Augmentation - Beta', 14297),
-  ('Limited Neural Boost', 13285),
-  ('Limited Neural Boost - Beta', 14296),
+  ('Limited Neural Boost', 13285),  # Amarr sells 2/day @ 1M
+  ('Limited Neural Boost - Beta', 14296),  # Amarr sells 2/day @ 8M
   ('Limited Ocular Filter', 13283),
   ('Limited Ocular Filter - Beta', 14295),
   ('Limited Social Adaptation Chip', 13286),
@@ -628,12 +628,6 @@ IMPLANTS = collections.OrderedDict((
   ('Social Adaptation Chip - Improved', 10226),
   ('Social Adaptation Chip - Standard', 10225),
 
-  ('High-grade Amulet Alpha', 20499),
-  ('High-grade Amulet Beta', 20501),
-  ('High-grade Amulet Delta', 20503),
-  ('High-grade Amulet Epsilon', 20505),
-  ('High-grade Amulet Gamma', 20507),
-  ('High-grade Amulet Omega', 20509),
   ('High-grade Ascendancy Alpha', 33516),
   ('High-grade Ascendancy Beta', 33525),
   ('High-grade Ascendancy Delta', 33526),
@@ -652,204 +646,48 @@ IMPLANTS = collections.OrderedDict((
   ('High-grade Crystal Epsilon', 20160),
   ('High-grade Crystal Gamma', 20158),
   ('High-grade Crystal Omega', 20161),
-  ('High-grade Grail Alpha', 31954),
-  ('High-grade Grail Beta', 31955),
-  ('High-grade Grail Delta', 31956),
-  ('High-grade Grail Epsilon', 31957),
-  ('High-grade Grail Gamma', 31958),
-  ('High-grade Grail Omega', 31959),
-  ('High-grade Halo Alpha', 20498),
-  ('High-grade Halo Beta', 20500),
-  ('High-grade Halo Delta', 20502),
-  ('High-grade Halo Epsilon', 20504),
-  ('High-grade Halo Gamma', 20506),
-  ('High-grade Halo Omega', 20508),
   ('High-grade Hydra Alpha', 54392),
   ('High-grade Hydra Beta', 54393),
   ('High-grade Hydra Delta', 54395),
   ('High-grade Hydra Epsilon', 54396),
   ('High-grade Hydra Gamma', 54394),
   ('High-grade Hydra Omega', 54397),
-  ('High-grade Jackal Alpha', 31974),
-  ('High-grade Jackal Beta', 31975),
-  ('High-grade Jackal Delta', 31976),
-  ('High-grade Jackal Epsilon', 31977),
-  ('High-grade Jackal Gamma', 31978),
-  ('High-grade Jackal Omega', 31979),
-  ('High-grade Mimesis Alpha', 52917),
-  ('High-grade Mimesis Beta', 52918),
-  ('High-grade Mimesis Delta', 52919),
-  ('High-grade Mimesis Epsilon', 52920),
-  ('High-grade Mimesis Gamma', 52921),
-  ('High-grade Mimesis Omega', 52922),
-  ('High-grade Nirvana Alpha', 53710),
-  ('High-grade Nirvana Beta', 53711),
-  ('High-grade Nirvana Delta', 53712),
-  ('High-grade Nirvana Epsilon', 53713),
-  ('High-grade Nirvana Gamma', 53715),
-  ('High-grade Nirvana Omega', 53714),
-  ('High-grade Rapture Alpha', 57123),
-  ('High-grade Rapture Beta', 57124),
-  ('High-grade Rapture Delta', 57126),
-  ('High-grade Rapture Epsilon', 57127),
-  ('High-grade Rapture Gamma', 57125),
-  ('High-grade Rapture Omega', 57128),
-  ('High-grade Savior Alpha', 53890),
-  ('High-grade Savior Beta', 53891),
-  ('High-grade Savior Delta', 53893),
-  ('High-grade Savior Epsilon', 53894),
-  ('High-grade Savior Gamma', 53892),
-  ('High-grade Savior Omega', 53895),
   ('High-grade Snake Alpha', 19540),
   ('High-grade Snake Beta', 19551),
   ('High-grade Snake Delta', 19554),
   ('High-grade Snake Epsilon', 19555),
-  ('High-grade Snake Gamma', 19553),
+  ('High-grade Snake Gamma', 19553),  # Amarr sells 2/week @ 390M
   ('High-grade Snake Omega', 19556),
-  ('High-grade Spur Alpha', 31968),
-  ('High-grade Spur Beta', 31969),
-  ('High-grade Spur Delta', 31970),
-  ('High-grade Spur Epsilon', 31971),
-  ('High-grade Spur Gamma', 31972),
-  ('High-grade Spur Omega', 31973),
-  ('High-grade Talisman Alpha', 19534),
-  ('High-grade Talisman Beta', 19535),
-  ('High-grade Talisman Delta', 19537),
-  ('High-grade Talisman Epsilon', 19538),
-  ('High-grade Talisman Gamma', 19536),
-  ('High-grade Talisman Omega', 19539),
-  ('High-grade Talon Alpha', 31962),
-  ('High-grade Talon Beta', 31963),
-  ('High-grade Talon Delta', 31964),
-  ('High-grade Talon Epsilon', 31965),
-  ('High-grade Talon Gamma', 31966),
-  ('High-grade Talon Omega', 31967),
-  ('Low-grade Amulet Alpha', 33953),
-  ('Low-grade Amulet Beta', 33954),
-  ('Low-grade Amulet Delta', 33955),
-  ('Low-grade Amulet Epsilon', 33956),
-  ('Low-grade Amulet Gamma', 33957),
-  ('Low-grade Amulet Omega', 33958),
   ('Low-grade Asklepian Alpha', 42145),
-  ('Low-grade Asklepian Beta', 42146),
+  ('Low-grade Asklepian Beta', 42146),  # Amarr sells 1/day @ 50M
   ('Low-grade Asklepian Delta', 42200),
   ('Low-grade Asklepian Epsilon', 42201),
   ('Low-grade Asklepian Gamma', 42202),
-  ('Low-grade Asklepian Omega', 42203),
-  ('Low-grade Centurion Alpha', 33917),
-  ('Low-grade Centurion Beta', 33918),
-  ('Low-grade Centurion Delta', 33919),
-  ('Low-grade Centurion Epsilon', 33920),
-  ('Low-grade Centurion Gamma', 33921),
-  ('Low-grade Centurion Omega', 33922),
-  ('Low-grade Crystal Alpha', 33923),
+  #('Low-grade Asklepian Omega', 42203),  # low volume
+  ('Low-grade Crystal Alpha', 33923),  # Amarr sells 2/week @ 150M
   ('Low-grade Crystal Beta', 33924),
-  ('Low-grade Crystal Delta', 33925),
+  ('Low-grade Crystal Delta', 33925),  # Amarr sells 3/week @ 177M
   ('Low-grade Crystal Epsilon', 33926),
   ('Low-grade Crystal Gamma', 33927),
   ('Low-grade Crystal Omega', 33928),
-  ('Low-grade Grail Alpha', 32101),
-  ('Low-grade Grail Beta', 32102),
-  ('Low-grade Grail Delta', 32103),
-  ('Low-grade Grail Epsilon', 32104),
-  ('Low-grade Grail Gamma', 32105),
-  ('Low-grade Grail Omega', 32122),
-  ('Low-grade Halo Alpha', 33935),
-  ('Low-grade Halo Beta', 33936),
-  ('Low-grade Halo Delta', 33937),
-  ('Low-grade Halo Epsilon', 33938),
-  ('Low-grade Halo Gamma', 33939),
-  ('Low-grade Halo Omega', 33940),
-  ('Low-grade Harvest Alpha', 33941),
-  ('Low-grade Harvest Beta', 33942),
-  ('Low-grade Harvest Delta', 33943),
-  ('Low-grade Harvest Epsilon', 33944),
-  ('Low-grade Harvest Gamma', 33945),
-  ('Low-grade Harvest Omega', 33946),
   ('Low-grade Hydra Alpha', 54404),
   ('Low-grade Hydra Beta', 54405),
   ('Low-grade Hydra Delta', 54407),
   ('Low-grade Hydra Epsilon', 54408),
   ('Low-grade Hydra Gamma', 54406),
   ('Low-grade Hydra Omega', 54409),
-  ('Low-grade Jackal Alpha', 32117),
-  ('Low-grade Jackal Beta', 32118),
-  ('Low-grade Jackal Delta', 32119),
-  ('Low-grade Jackal Epsilon', 32120),
-  ('Low-grade Jackal Gamma', 32121),
-  ('Low-grade Jackal Omega', 32123),
-  ('Low-grade Mimesis Alpha', 52674),
-  ('Low-grade Mimesis Beta', 52679),
-  ('Low-grade Mimesis Delta', 52681),
-  ('Low-grade Mimesis Epsilon', 52682),
-  ('Low-grade Mimesis Gamma', 52680),
-  ('Low-grade Mimesis Omega', 52683),
-  ('Low-grade Nirvana Alpha', 53853),
-  ('Low-grade Nirvana Beta', 53854),
-  ('Low-grade Nirvana Delta', 53856),
-  ('Low-grade Nirvana Epsilon', 53857),
-  ('Low-grade Nirvana Gamma', 53855),
-  ('Low-grade Nirvana Omega', 53839),
-  ('Low-grade Nomad Alpha', 33947),
-  ('Low-grade Nomad Beta', 33948),
-  ('Low-grade Nomad Delta', 33949),
-  ('Low-grade Nomad Epsilon', 33950),
-  ('Low-grade Nomad Gamma', 33951),
-  ('Low-grade Nomad Omega', 33952),
-  ('Low-grade Rapture Alpha', 57110),
-  ('Low-grade Rapture Beta', 57111),
-  ('Low-grade Rapture Delta', 57113),
-  ('Low-grade Rapture Epsilon', 57114),
-  ('Low-grade Rapture Gamma', 57112),
-  ('Low-grade Rapture Omega', 57116),
-  ('Low-grade Savior Alpha', 53902),
-  ('Low-grade Savior Beta', 53903),
-  ('Low-grade Savior Delta', 53905),
-  ('Low-grade Savior Epsilon', 53906),
-  ('Low-grade Savior Gamma', 53904),
-  ('Low-grade Savior Omega', 53907),
   ('Low-grade Snake Alpha', 33959),
-  ('Low-grade Snake Beta', 33960),
-  ('Low-grade Snake Delta', 33961),
+  #('Low-grade Snake Beta', 33960),  # low volume
+  #('Low-grade Snake Delta', 33961),  # low volume
   ('Low-grade Snake Epsilon', 33962),
-  ('Low-grade Snake Gamma', 33963),
+  ('Low-grade Snake Gamma', 33963),  # Amarr sells 0.3/day @ 80M
   ('Low-grade Snake Omega', 33964),
-  ('Low-grade Spur Alpha', 32107),
-  ('Low-grade Spur Beta', 32108),
-  ('Low-grade Spur Delta', 32109),
-  ('Low-grade Spur Epsilon', 32110),
-  ('Low-grade Spur Gamma', 32111),
-  ('Low-grade Spur Omega', 32124),
-  ('Low-grade Talisman Alpha', 33965),
-  ('Low-grade Talisman Beta', 33966),
-  ('Low-grade Talisman Delta', 33967),
-  ('Low-grade Talisman Epsilon', 33968),
-  ('Low-grade Talisman Gamma', 33969),
-  ('Low-grade Talisman Omega', 33970),
-  ('Low-grade Talon Alpha', 32112),
-  ('Low-grade Talon Beta', 32113),
-  ('Low-grade Talon Delta', 32114),
-  ('Low-grade Talon Epsilon', 32115),
-  ('Low-grade Talon Gamma', 32116),
-  ('Low-grade Talon Omega', 32125),
   ('Low-grade Virtue Alpha', 33971),
   ('Low-grade Virtue Beta', 33972),
-  ('Low-grade Virtue Delta', 33973),
+  #('Low-grade Virtue Delta', 33973),  # low volume
   ('Low-grade Virtue Epsilon', 33974),
   ('Low-grade Virtue Gamma', 33975),
   ('Low-grade Virtue Omega', 33976),
-  ('Low-grade Wedge Alpha', 88119),
-  ('Low-grade Wedge Beta', 88120),
-  ('Low-grade Wedge Delta', 88122),
-  ('Low-grade Wedge Epsilon', 88123),
-  ('Low-grade Wedge Gamma', 88121),
-  ('Low-grade Wedge Omega', 88124),
-  ('Mid-grade Amulet Alpha', 22119),
-  ('Mid-grade Amulet Beta', 22120),
-  ('Mid-grade Amulet Delta', 22121),
-  ('Mid-grade Amulet Epsilon', 22122),
-  ('Mid-grade Amulet Gamma', 22123),
-  ('Mid-grade Amulet Omega', 22124),
   ('Mid-grade Ascendancy Alpha', 33555),
   ('Mid-grade Ascendancy Beta', 33557),
   ('Mid-grade Ascendancy Delta', 33559),
@@ -857,110 +695,50 @@ IMPLANTS = collections.OrderedDict((
   ('Mid-grade Ascendancy Gamma', 33563),
   ('Mid-grade Ascendancy Omega', 33565),
   ('Mid-grade Asklepian Alpha', 42204),
-  ('Mid-grade Asklepian Beta', 42205),
-  ('Mid-grade Asklepian Delta', 42207),
+  ('Mid-grade Asklepian Beta', 42205),  # Amarr sells 2/day @ 75M
+  ('Mid-grade Asklepian Delta', 42207),  # Dodixie sells 0.5/day @ 265M
   ('Mid-grade Asklepian Epsilon', 42208),
   ('Mid-grade Asklepian Gamma', 42206),
   ('Mid-grade Asklepian Omega', 42209),
-  ('Mid-grade Centurion Alpha', 28790),
-  ('Mid-grade Centurion Beta', 28791),
-  ('Mid-grade Centurion Delta', 28792),
-  ('Mid-grade Centurion Epsilon', 28793),
-  ('Mid-grade Centurion Gamma', 28794),
-  ('Mid-grade Centurion Omega', 28795),
   ('Mid-grade Crystal Alpha', 22107),
   ('Mid-grade Crystal Beta', 22108),
   ('Mid-grade Crystal Delta', 22109),
   ('Mid-grade Crystal Epsilon', 22110),
-  ('Mid-grade Crystal Gamma', 22111),
+  ('Mid-grade Crystal Gamma', 22111),  # Dodixie sells 0.5/day @ 146M
   ('Mid-grade Crystal Omega', 22112),
-  ('Mid-grade Halo Alpha', 22113),
-  ('Mid-grade Halo Beta', 22114),
-  ('Mid-grade Halo Delta', 22115),
-  ('Mid-grade Halo Epsilon', 22116),
-  ('Mid-grade Halo Gamma', 22117),
-  ('Mid-grade Halo Omega', 22118),
-  ('Mid-grade Harvest Alpha', 28802),
-  ('Mid-grade Harvest Beta', 28803),
-  ('Mid-grade Harvest Delta', 28804),
-  ('Mid-grade Harvest Epsilon', 28805),
-  ('Mid-grade Harvest Gamma', 28806),
-  ('Mid-grade Harvest Omega', 28807),
   ('Mid-grade Hydra Alpha', 54398),
   ('Mid-grade Hydra Beta', 54399),
   ('Mid-grade Hydra Delta', 54401),
   ('Mid-grade Hydra Epsilon', 54402),
   ('Mid-grade Hydra Gamma', 54400),
   ('Mid-grade Hydra Omega', 54403),
-  ('Mid-grade Mimesis Alpha', 52785),
-  ('Mid-grade Mimesis Beta', 52786),
-  ('Mid-grade Mimesis Delta', 52788),
-  ('Mid-grade Mimesis Epsilon', 52789),
-  ('Mid-grade Mimesis Gamma', 52787),
-  ('Mid-grade Mimesis Omega', 52790),
-  ('Mid-grade Nirvana Alpha', 53704),
-  ('Mid-grade Nirvana Beta', 53705),
-  ('Mid-grade Nirvana Delta', 53706),
-  ('Mid-grade Nirvana Epsilon', 53707),
-  ('Mid-grade Nirvana Gamma', 53708),
-  ('Mid-grade Nirvana Omega', 53709),
-  ('Mid-grade Nomad Alpha', 28796),
-  ('Mid-grade Nomad Beta', 28797),
-  ('Mid-grade Nomad Delta', 28798),
-  ('Mid-grade Nomad Epsilon', 28799),
-  ('Mid-grade Nomad Gamma', 28800),
-  ('Mid-grade Nomad Omega', 28801),
-  ('Mid-grade Rapture Alpha', 57117),
-  ('Mid-grade Rapture Beta', 57118),
-  ('Mid-grade Rapture Delta', 57120),
-  ('Mid-grade Rapture Epsilon', 57121),
-  ('Mid-grade Rapture Gamma', 57119),
-  ('Mid-grade Rapture Omega', 57122),
-  ('Mid-grade Savior Alpha', 53896),
-  ('Mid-grade Savior Beta', 53897),
-  ('Mid-grade Savior Delta', 53899),
-  ('Mid-grade Savior Epsilon', 53900),
-  ('Mid-grade Savior Gamma', 53898),
-  ('Mid-grade Savior Omega', 53901),
   ('Mid-grade Snake Alpha', 22125),
   ('Mid-grade Snake Beta', 22126),
   ('Mid-grade Snake Delta', 22127),
   ('Mid-grade Snake Epsilon', 22128),
   ('Mid-grade Snake Gamma', 22129),
   ('Mid-grade Snake Omega', 22130),
-  ('Mid-grade Talisman Alpha', 22131),
-  ('Mid-grade Talisman Beta', 22133),
-  ('Mid-grade Talisman Delta', 22134),
-  ('Mid-grade Talisman Epsilon', 22135),
-  ('Mid-grade Talisman Gamma', 22136),
-  ('Mid-grade Talisman Omega', 22137),
-  ('Mid-grade Virtue Alpha', 28808),
+  ('Mid-grade Virtue Alpha', 28808),  # Amarr sells 1/day @ 145M
   ('Mid-grade Virtue Beta', 28809),
   ('Mid-grade Virtue Delta', 28810),
   ('Mid-grade Virtue Epsilon', 28811),
-  ('Mid-grade Virtue Gamma', 28812),
-  ('Mid-grade Virtue Omega', 28813),
-  ('Mid-grade Wedge Alpha', 88125),
-  ('Mid-grade Wedge Beta', 88126),
-  ('Mid-grade Wedge Delta', 88128),
-  ('Mid-grade Wedge Epsilon', 88129),
-  ('Mid-grade Wedge Gamma', 88127),
-  ('Mid-grade Wedge Omega', 88130),
+  ('Mid-grade Virtue Gamma', 28812),  # Amarr sells 1/day @ 281M
+  ('Mid-grade Virtue Omega', 28813),  # Amarr sells 1/day @ 887M
 ))
 
 # Additional items to consider.
 
 EXTRA = collections.OrderedDict((
-  ('Graviton Physics', 11446),
-  ('High Energy Physics', 11433),
-  ('Hydromagnetic Physics', 11443),
-  ('Quantum Physics', 11455),
+  ('Graviton Physics', 11446),  # Dodixie sells 2/day @ 7M
+  ('High Energy Physics', 11433),  # Amarr sells 5/day @ 4M
+  ('Hydromagnetic Physics', 11443),  # Dodixie sells 2/day @ 10M
+  ('Quantum Physics', 11455),  # Dodixie sells 1/day @ 4M
 ))
 
 
 if __name__ == '__main__':
   prices = {}  # {item => {station => price}}
-  items = MINERALS | SKILLS | FILAMENTS | DRONES | FACTION_MODULES | IMPLANTS | EXTRA
+  items = MINERALS | SKILLS | FILAMENTS | DRONES | IMPLANTS | EXTRA
 
   for station_id in STATIONS.keys():
     for price in util.get_prices(station_id, items.values()):
