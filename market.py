@@ -82,7 +82,7 @@ SKILLS = collections.OrderedDict((
   ('Medium Disintegrator Specialization', 47874),  # Dodixie sells 2/day @ 6M
   ('Large Disintegrator Specialization', 47875),  # Amarr sells 2/day @ 272M
 
-  ('Small Vorton Specialization', 54827),
+  ('Small Vorton Specialization', 54827),  # Dodixie sells 0.5/day @ 66M
   ('Medium Vorton Specialization', 54828),  # Amarr sells 2/day @ 45M
   ('Large Vorton Specialization', 54829),  # Amarr sells 1/day @ 81M
 ))
@@ -724,6 +724,22 @@ IMPLANTS = collections.OrderedDict((
   ('Mid-grade Virtue Epsilon', 28811),
   ('Mid-grade Virtue Gamma', 28812),  # Amarr sells 1/day @ 281M
   ('Mid-grade Virtue Omega', 28813),  # Amarr sells 1/day @ 887M
+
+  ("Neural Lace 'Blackglass' Net Intrusion 920-40", 47028),
+  #("Neural Lace 'Bluefire' Net Ablation 960-10", 85748),  # low volume
+  ("Poteque 'Prospector' Archaeology AC-905", 27196),  # Dodixie sells 0.5/day @ 44M
+  ("Poteque 'Prospector' Astrometric Acquisition AQ-702", 27193),  # Dodixie sells 1/day @ 7M
+  ("Poteque 'Prospector' Astrometric Acquisition AQ-706", 27187),
+  ("Poteque 'Prospector' Astrometric Acquisition AQ-710", 27192),
+  ("Poteque 'Prospector' Astrometric Pinpointing AP-602", 27191),
+  ("Poteque 'Prospector' Astrometric Pinpointing AP-606", 27186),
+  ("Poteque 'Prospector' Astrometric Pinpointing AP-610", 27190),
+  ("Poteque 'Prospector' Astrometric Rangefinding AR-802", 27195),  # Dodixie sells 1/day @ 6M
+  ("Poteque 'Prospector' Astrometric Rangefinding AR-806", 27188),
+  ("Poteque 'Prospector' Astrometric Rangefinding AR-810", 27194),
+  ("Poteque 'Prospector' Environmental Analysis EY-1005", 27260),  # Dodixie sells 1/day @ shortage
+  ("Poteque 'Prospector' Hacking HC-905", 27197),  # Dodixie sells 0.5/day @ shortage
+  ("Poteque 'Prospector' Salvaging SV-905", 27198),
 ))
 
 # Additional items to consider.
@@ -733,6 +749,8 @@ EXTRA = collections.OrderedDict((
   ('High Energy Physics', 11433),  # Amarr sells 5/day @ 4M
   ('Hydromagnetic Physics', 11443),  # Dodixie sells 2/day @ 10M
   ('Quantum Physics', 11455),  # Dodixie sells 1/day @ 4M
+
+  ('Sisters Core Probe Launcher', 28758),  # Amarr buys 50/day @ 71M
 ))
 
 
