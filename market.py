@@ -8,8 +8,8 @@ import util
 MIN_SELL = 1000000  # minimum sale value for an item to be shown
 MIN_MARGIN = 50  # minimum margin for an item to be shown
 
-DIV = '+{}+'.format('+'.join(['-' * width for width in (60, 20, 20, 20, 30, 30)]))
-LINE = '| {:<58} | {:>18} | {:>18} | {:>18} | {:>28} | {:>28} |'
+DIV = '+{}+'.format('+'.join(['-' * width for width in (60, 15, 15, 15, 30, 30)]))
+LINE = '| {:<58} | {:>13} | {:>13} | {:>13} | {:>28} | {:>28} |'
 
 # from https://www.adam4eve.eu/info_stations.php
 #
