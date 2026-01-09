@@ -6,11 +6,12 @@ import os
 import json
 import sys
 
-DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 10, 10)]))
-LINE = '| {:<68} | {:>8} | {:>8} |'
+DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 10, 10, 10)]))
+LINE = '| {:<68} | {:>8} | {:>8} | {:>8} |'
 TUPLE_LINE = "  ('{}', {}),"
 
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
+STATIC_GROUPS = 'eve-online-static-data-3142455-jsonl/marketGroups.jsonl'
 
 DEFAULT_ARGS = {
   'name': None,
@@ -25,9 +26,11 @@ Lists the Eve Online items that match a criteria.
 
   --name NAME     look for this substring in its name
   --id ID         look for this item identifier
-  --group ID      look for this group identifier
+  --group ID      look for this market group identifier
   -h, --help      presents this help
 """
+
+MarketGroup = collections.namedtuple('MarketGroup', ('id', 'name', 'parent_id'))
 
 
 def parse(argv):
@@ -90,29 +93,52 @@ if __name__ == '__main__':
     print('Please downdoad and extract the json from: https://developers.eveonline.com/static-data')
     sys.exit(1)
 
-  matches = []  # (name, item_id, group_id) tuples
+  matches = []  # (name, item_id, group_id, category_id) tuples
+  groups = {}  # {id => MarketGroup}
+
+  with open(STATIC_GROUPS) as static_file:
+    for line in static_file.readlines():
+      static_json = json.loads(line)
+
+      name, group_id, parent_id = static_json['name']['en'], static_json['_key'], static_json.get('parentGroupID')
+      groups[group_id] = MarketGroup(group_id, name, parent_id)
 
   with open(STATIC_TYPES) as static_file:
     for line in static_file.readlines():
       static_json = json.loads(line)
-      name, item_id, group_id = static_json['name']['en'], static_json['_key'], static_json['groupID']
 
-      if (args.name and args.name in name) or args.item_id == item_id or args.group_id == group_id:
-        matches.append((name, item_id, group_id))
+      if 'marketGroupID' not in static_json:
+        continue
+
+      name, item_id, group_id = static_json['name']['en'], static_json['_key'], static_json['marketGroupID']
+
+      # get this group's top parent
+
+      category = groups[group_id]
+      is_group_match = args.group_id == category.id
+
+      while category.parent_id is not None:
+        category = groups[category.parent_id]
+        is_group_match = is_group_match or (args.group_id == category.id)
+
+      if (args.name and args.name in name) or args.item_id == item_id or is_group_match:
+        matches.append((name, item_id, group_id, category.id))
+
 
   matches.sort(key = lambda entry: entry[0])
 
-  headers = ('Item', 'ID', 'Group ID')
+  headers = ('Item', 'ID', 'Group ID', 'Category')
 
   print(DIV)
   print(LINE.format(*headers))
   print(DIV)
 
-  for name, item_id, group_id in matches:
+  for name, item_id, group_id, category_id in matches:
+
     if args.print_tuple:
       print(TUPLE_LINE.format(name, item_id))
     else:
-      print(LINE.format(name, item_id, group_id))
+      print(LINE.format(name, item_id, group_id, category_id))
   
   print(DIV)
 
