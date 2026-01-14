@@ -33,6 +33,25 @@ Lists the Eve Online items that match a criteria.
 MarketGroup = collections.namedtuple('MarketGroup', ('id', 'name', 'parent_id'))
 
 
+def list_market_groups():
+  """
+  Provides the mapping of market group identifiers to their MarketGroup.
+
+  :returns: a **dict** of **int** identifiers to their MarketGroup
+  """
+
+  groups = {}  # {id => MarketGroup}
+
+  with open(STATIC_GROUPS) as static_file:
+    for line in static_file.readlines():
+      static_json = json.loads(line)
+
+      name, group_id, parent_id = static_json['name']['en'], static_json['_key'], static_json.get('parentGroupID')
+      groups[group_id] = MarketGroup(group_id, name, parent_id)
+
+  return groups
+
+
 def parse(argv):
   """
   Parses our arguments, providing a named tuple with their values.
@@ -89,19 +108,12 @@ if __name__ == '__main__':
     print(HELP_TEXT)
     sys.exit()
 
-  if not os.path.exists(STATIC_TYPES):
+  if not os.path.exists(STATIC_GROUPS) or not os.path.exists(STATIC_TYPES):
     print('Please downdoad and extract the json from: https://developers.eveonline.com/static-data')
     sys.exit(1)
 
   matches = []  # (name, item_id, group_id, category_id) tuples
-  groups = {}  # {id => MarketGroup}
-
-  with open(STATIC_GROUPS) as static_file:
-    for line in static_file.readlines():
-      static_json = json.loads(line)
-
-      name, group_id, parent_id = static_json['name']['en'], static_json['_key'], static_json.get('parentGroupID')
-      groups[group_id] = MarketGroup(group_id, name, parent_id)
+  groups = list_market_groups()
 
   with open(STATIC_TYPES) as static_file:
     for line in static_file.readlines():
