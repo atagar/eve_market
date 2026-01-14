@@ -864,10 +864,13 @@ if __name__ == '__main__':
   for item_name, item_id in all_items.items():
     buy_from = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else math.inf)[0]
     sell_at = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else -1, reverse = True)[0]
-    margin = int((sell_at.sell - buy_from.sell) / buy_from.sell * 100) if (buy_from.sell and sell_at.sell) else None
-    has_shortage = prices[item_id][JITA].sell is None or prices[item_id][AMARR].sell is None or prices[item_id][DODIXIE].sell is None
 
-    if has_shortage or (margin >= MIN_MARGIN and sell_at.sell >= MIN_SELL):
+    if prices[item_id][JITA].sell is None or prices[item_id][AMARR].sell is None or prices[item_id][DODIXIE].sell is None:
+      continue  # item with a shortage tend to be too obscure
+
+    margin = int((sell_at.sell - buy_from.sell) / buy_from.sell * 100) if (buy_from.sell and sell_at.sell) else None
+
+    if margin >= MIN_MARGIN and sell_at.sell >= MIN_SELL:
       lines.append((item_name, item_id, buy_from, sell_at, margin))
 
   lines.sort(key = lambda entry: entry[4] if entry[4] is not None else -1, reverse = True)
@@ -879,9 +882,6 @@ if __name__ == '__main__':
   print(DIV)
 
   for item_name, item_id, buy_from, sell_at, margin in lines:
-    if buy_from.sell is None or sell_at.sell is None:
-      continue  # too obscure, this item isn't bought/sold anywhere
-
     print(LINE.format(
       item_name,
       '{:,}'.format(prices[item_id][JITA].sell) if prices[item_id][JITA].sell else 'N/A',
