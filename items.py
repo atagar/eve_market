@@ -12,8 +12,8 @@ DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 10, 10, 10)]))
 LINE = '| {:<68} | {:>8} | {:>8} | {:>8} |'
 TUPLE_LINE = "  ('{}', {}),"
 
-PRICE_DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 10, 10, 15, 15, 15)]))
-PRICE_LINE = '| {:<68} | {:>8} | {:>8} | {:>13} | {:>13} | {:>13} |'
+PRICE_DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 10, 10, 15, 15, 15, 15, 15, 15)]))
+PRICE_LINE = '| {:<68} | {:>8} | {:>8} | {:>13} | {:>13} | {:>13} | {:>13} | {:>13} | {:>13} |'
 
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 STATIC_GROUPS = 'eve-online-static-data-3142455-jsonl/marketGroups.jsonl'
@@ -172,7 +172,7 @@ if __name__ == '__main__':
         prices.setdefault(price.item, {})[station_id] = price
 
   if args.prices:
-    headers = ('Item', 'ID', 'Group', 'Jita', 'Amarr', 'Dodixie')
+    headers = ('Item', 'ID', 'Group', 'Jita Sell', 'Amarr Sell', 'Dodixie Sell', 'Jita Buy', 'Amarr Buy', 'Dodixie Buy')
 
     print(PRICE_DIV)
     print(PRICE_LINE.format(*headers))
@@ -188,11 +188,15 @@ if __name__ == '__main__':
     if args.print_tuple:
       print(TUPLE_LINE.format(name, item_id))
     elif args.prices:
-      jita_price = '{:,}'.format(prices[item_id][util.JITA].sell) if prices[item_id][util.JITA].sell else 'N/A'
-      amarr_price = '{:,}'.format(prices[item_id][util.AMARR].sell) if prices[item_id][util.AMARR].sell else 'N/A'
-      dodixie_price = '{:,}'.format(prices[item_id][util.DODIXIE].sell) if prices[item_id][util.DODIXIE].sell else 'N/A'
+      jita_sell = '{:,}'.format(prices[item_id][util.JITA].sell) if prices[item_id][util.JITA].sell else 'N/A'
+      amarr_sell = '{:,}'.format(prices[item_id][util.AMARR].sell) if prices[item_id][util.AMARR].sell else 'N/A'
+      dodixie_sell = '{:,}'.format(prices[item_id][util.DODIXIE].sell) if prices[item_id][util.DODIXIE].sell else 'N/A'
 
-      print(PRICE_LINE.format(name, item_id, group_id, jita_price, amarr_price, dodixie_price))
+      jita_buy = '{:,}'.format(prices[item_id][util.JITA].buy) if prices[item_id][util.JITA].buy else 'N/A'
+      amarr_buy = '{:,}'.format(prices[item_id][util.AMARR].buy) if prices[item_id][util.AMARR].buy else 'N/A'
+      dodixie_buy = '{:,}'.format(prices[item_id][util.DODIXIE].buy) if prices[item_id][util.DODIXIE].buy else 'N/A'
+
+      print(PRICE_LINE.format(name, item_id, group_id, jita_sell, amarr_sell, dodixie_sell, jita_buy, amarr_buy, dodixie_buy))
     else:
       print(LINE.format(name, item_id, group_id, category_id))
 
