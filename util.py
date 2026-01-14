@@ -15,6 +15,17 @@ Price = collections.namedtuple('Price', ['item', 'station', 'buy', 'sell'])
 
 
 def get_prices(station, items):
+  # URLs should be under 2,000 characters. Our URL has a 60 character prefix
+  # and items IDs are up to six digits, so let's do batches of 320.
+
+  items = list(items)
+
+  for i in range(0, len(items), 320):
+    for price in _get_prices(station, items[i:i + 320]):
+      yield price
+
+
+def _get_prices(station, items):
   url = API_URL % (station, ','.join(map(str, items)))
   cache_path = os.path.join('cache', '{}:{}'.format(station, hash('-'.join(map(str, items)))))
 

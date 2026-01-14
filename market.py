@@ -3,6 +3,7 @@
 import collections
 import math
 
+import items
 import util
 
 MIN_SELL = 1000000  # minimum sale value for an item to be shown
@@ -834,16 +835,33 @@ TOP_TRADE_VALUE = collections.OrderedDict((
 
 if __name__ == '__main__':
   prices = {}  # {item => {station => price}}
-  #items = MINERALS | SKILLS | FILAMENTS | DRONES | IMPLANTS | EXTRA
-  items = MINERALS | TOP_TRADE_VALUE
+  #all_items = MINERALS | SKILLS | FILAMENTS | DRONES | IMPLANTS | EXTRA
+  #all_items = MINERALS | TOP_TRADE_VALUE
+
+  all_items = {}  # mapping if item names to their identifier
+
+  groups = items.list_market_groups()
+  target_group = 9  # all modules
+
+  for item in items.list_items():
+    category = groups[item.group_id]
+    is_group_match = target_group == category.id
+
+    while category.parent_id is not None:
+      category = groups[category.parent_id]
+      is_group_match = is_group_match or (target_group == category.id)
+
+    if is_group_match:
+      all_items[item.name] = item.id
+
 
   for station_id in STATIONS.keys():
-    for price in util.get_prices(station_id, items.values()):
+    for price in util.get_prices(station_id, all_items.values()):
       prices.setdefault(price.item, {})[station_id] = price
 
   lines = []  # list of (item_name, item_id, buy_from, sell_at, margin) tuples
 
-  for item_name, item_id in items.items():
+  for item_name, item_id in all_items.items():
     buy_from = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else math.inf)[0]
     sell_at = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else -1, reverse = True)[0]
     margin = int((sell_at.sell - buy_from.sell) / buy_from.sell * 100) if (buy_from.sell and sell_at.sell) else None
@@ -861,6 +879,9 @@ if __name__ == '__main__':
   print(DIV)
 
   for item_name, item_id, buy_from, sell_at, margin in lines:
+    if buy_from.sell is None or sell_at.sell is None:
+      continue  # too obscure, this item isn't bought/sold anywhere
+
     print(LINE.format(
       item_name,
       '{:,}'.format(prices[item_id][JITA].sell) if prices[item_id][JITA].sell else 'N/A',
