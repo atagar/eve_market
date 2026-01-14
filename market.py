@@ -12,22 +12,6 @@ MIN_MARGIN = 50  # minimum margin for an item to be shown
 DIV = '+{}+'.format('+'.join(['-' * width for width in (60, 15, 15, 15, 30, 30)]))
 LINE = '| {:<58} | {:>13} | {:>13} | {:>13} | {:>28} | {:>28} |'
 
-# from https://www.adam4eve.eu/info_stations.php
-#
-# Perimeter = 1044752365771
-# Ashab = 1044857068649
-# Botane = 1044961079041
-
-JITA = 60003760
-AMARR = 60008494
-DODIXIE = 60011866
-
-STATIONS = collections.OrderedDict((
-  (JITA, 'Jita'),
-  (AMARR, 'Amarr'),
-  (DODIXIE, 'Dodixie'),
-))
-
 # Other bulk items to consider: PI
 
 MINERALS = collections.OrderedDict((
@@ -855,7 +839,7 @@ if __name__ == '__main__':
       all_items[item.name] = item.id
 
 
-  for station_id in STATIONS.keys():
+  for station_id in util.STATIONS.keys():
     for price in util.get_prices(station_id, all_items.values()):
       prices.setdefault(price.item, {})[station_id] = price
 
@@ -865,7 +849,7 @@ if __name__ == '__main__':
     buy_from = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else math.inf)[0]
     sell_at = sorted(prices[item_id].values(), key = lambda price: price.sell if price.sell else -1, reverse = True)[0]
 
-    if prices[item_id][JITA].sell is None or prices[item_id][AMARR].sell is None or prices[item_id][DODIXIE].sell is None:
+    if prices[item_id][util.JITA].sell is None or prices[item_id][util.AMARR].sell is None or prices[item_id][util.DODIXIE].sell is None:
       continue  # item with a shortage tend to be too obscure
 
     margin = int((sell_at.sell - buy_from.sell) / buy_from.sell * 100) if (buy_from.sell and sell_at.sell) else None
@@ -884,11 +868,11 @@ if __name__ == '__main__':
   for item_name, item_id, buy_from, sell_at, margin in lines:
     print(LINE.format(
       item_name,
-      '{:,}'.format(prices[item_id][JITA].sell) if prices[item_id][JITA].sell else 'N/A',
-      '{:,}'.format(prices[item_id][AMARR].sell) if prices[item_id][AMARR].sell else 'N/A',
-      '{:,}'.format(prices[item_id][DODIXIE].sell) if prices[item_id][DODIXIE].sell else 'N/A',
-      '{} @ {:,}'.format(STATIONS[buy_from.station], buy_from.sell),
-      '{} @ {:,} ({})'.format(STATIONS[sell_at.station], sell_at.sell, '{}%'.format(margin) if margin is not None else 'N/A'),
+      '{:,}'.format(prices[item_id][util.JITA].sell) if prices[item_id][util.JITA].sell else 'N/A',
+      '{:,}'.format(prices[item_id][util.AMARR].sell) if prices[item_id][util.AMARR].sell else 'N/A',
+      '{:,}'.format(prices[item_id][util.DODIXIE].sell) if prices[item_id][util.DODIXIE].sell else 'N/A',
+      '{} @ {:,}'.format(util.STATIONS[buy_from.station], buy_from.sell),
+      '{} @ {:,} ({})'.format(util.STATIONS[sell_at.station], sell_at.sell, '{}%'.format(margin) if margin is not None else 'N/A'),
     ))
 
   print(DIV)

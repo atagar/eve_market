@@ -7,6 +7,22 @@ import sys
 
 import urllib.request
 
+# from https://www.adam4eve.eu/info_stations.php
+#
+# Perimeter = 1044752365771
+# Ashab = 1044857068649
+# Botane = 1044961079041
+
+JITA = 60003760
+AMARR = 60008494
+DODIXIE = 60011866
+
+STATIONS = collections.OrderedDict((
+  (JITA, 'Jita'),
+  (AMARR, 'Amarr'),
+  (DODIXIE, 'Dodixie'),
+))
+
 # from https://triff.tools/api/docs/
 
 API_URL = 'https://triff.tools/api/prices/station/?station_id=%i&type_ids=%s'

@@ -6,9 +6,14 @@ import os
 import json
 import sys
 
+import util
+
 DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 10, 10, 10)]))
 LINE = '| {:<68} | {:>8} | {:>8} | {:>8} |'
 TUPLE_LINE = "  ('{}', {}),"
+
+PRICE_DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 10, 10, 15, 15, 15)]))
+PRICE_LINE = '| {:<68} | {:>8} | {:>8} | {:>13} | {:>13} | {:>13} |'
 
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 STATIC_GROUPS = 'eve-online-static-data-3142455-jsonl/marketGroups.jsonl'
@@ -17,6 +22,7 @@ DEFAULT_ARGS = {
   'name': None,
   'item_id': None,
   'group_id': None,
+  'prices': False,
   'print_tuple': False,
   'print_help': False,
 }
@@ -27,6 +33,7 @@ Lists the Eve Online items that match a criteria.
   --name NAME     look for this substring in its name
   --id ID         look for this item identifier
   --group ID      look for this market group identifier
+  -p, --prices    list the market's prices
   -h, --help      presents this help
 """
 
@@ -89,7 +96,7 @@ def parse(argv):
   args = dict(DEFAULT_ARGS)
 
   try:
-    recognized_args, unrecognized_args = getopt.getopt(argv, 'th', ['name=', 'id=', 'group=', 'tuple', 'help'])
+    recognized_args, unrecognized_args = getopt.getopt(argv, 'pth', ['name=', 'id=', 'group=', 'prices', 'tuple', 'help'])
 
     if unrecognized_args:
       raise getopt.GetoptError("'%s' aren't recognized arguments" % "', '".join(unrecognized_args))
@@ -109,6 +116,8 @@ def parse(argv):
         raise ValueError("Identifiers must be an integer, not '{}'".format(arg))
 
       args['group_id'] = int(arg)
+    elif opt in ('-p', '--prices'):
+      args['prices'] = True
     elif opt in ('-t', '--tuple'):
       args['print_tuple'] = True
     elif opt in ('-h', '--help'):
@@ -155,18 +164,40 @@ if __name__ == '__main__':
 
   matches.sort(key = lambda entry: entry[0])
 
-  headers = ('Item', 'ID', 'Group ID', 'Category')
+  prices = {}
 
-  print(DIV)
-  print(LINE.format(*headers))
-  print(DIV)
+  if args.prices:
+    for station_id in util.STATIONS.keys():
+      for price in util.get_prices(station_id, [m[1] for m in matches]):
+        prices.setdefault(price.item, {})[station_id] = price
+
+  if args.prices:
+    headers = ('Item', 'ID', 'Group', 'Jita', 'Amarr', 'Dodixie')
+
+    print(PRICE_DIV)
+    print(PRICE_LINE.format(*headers))
+    print(PRICE_DIV)
+  else:
+    headers = ('Item', 'ID', 'Group', 'Category')
+
+    print(DIV)
+    print(LINE.format(*headers))
+    print(DIV)
 
   for name, item_id, group_id, category_id in matches:
-
     if args.print_tuple:
       print(TUPLE_LINE.format(name, item_id))
+    elif args.prices:
+      jita_price = '{:,}'.format(prices[item_id][util.JITA].sell) if prices[item_id][util.JITA].sell else 'N/A'
+      amarr_price = '{:,}'.format(prices[item_id][util.AMARR].sell) if prices[item_id][util.AMARR].sell else 'N/A'
+      dodixie_price = '{:,}'.format(prices[item_id][util.DODIXIE].sell) if prices[item_id][util.DODIXIE].sell else 'N/A'
+
+      print(PRICE_LINE.format(name, item_id, group_id, jita_price, amarr_price, dodixie_price))
     else:
       print(LINE.format(name, item_id, group_id, category_id))
-  
-  print(DIV)
+
+  if args.prices:
+    print(PRICE_DIV)
+  else:
+    print(DIV)
 
