@@ -30,7 +30,30 @@ Lists the Eve Online items that match a criteria.
   -h, --help      presents this help
 """
 
+Item = collections.namedtuple('Item', ('id', 'name', 'group_id'))
 MarketGroup = collections.namedtuple('MarketGroup', ('id', 'name', 'parent_id'))
+
+
+def list_items():
+  """
+  Provides a list of all Items.
+
+  :returns: a **list** of Items
+  """
+
+  items = []
+
+  with open(STATIC_TYPES) as static_file:
+    for line in static_file.readlines():
+      static_json = json.loads(line)
+
+      if 'marketGroupID' not in static_json:
+        continue
+
+      name, item_id, group_id = static_json['name']['en'], static_json['_key'], static_json['marketGroupID']
+      items.append(Item(item_id, name, group_id))
+
+  return items
 
 
 def list_market_groups():
@@ -112,30 +135,23 @@ if __name__ == '__main__':
     print('Please downdoad and extract the json from: https://developers.eveonline.com/static-data')
     sys.exit(1)
 
-  matches = []  # (name, item_id, group_id, category_id) tuples
+  items = list_items()
   groups = list_market_groups()
 
-  with open(STATIC_TYPES) as static_file:
-    for line in static_file.readlines():
-      static_json = json.loads(line)
+  matches = []  # (name, item_id, group_id, category_id) tuples
 
-      if 'marketGroupID' not in static_json:
-        continue
+  for item in items:
+    # get this group's top parent
 
-      name, item_id, group_id = static_json['name']['en'], static_json['_key'], static_json['marketGroupID']
+    category = groups[item.group_id]
+    is_group_match = args.group_id == category.id
 
-      # get this group's top parent
+    while category.parent_id is not None:
+      category = groups[category.parent_id]
+      is_group_match = is_group_match or (args.group_id == category.id)
 
-      category = groups[group_id]
-      is_group_match = args.group_id == category.id
-
-      while category.parent_id is not None:
-        category = groups[category.parent_id]
-        is_group_match = is_group_match or (args.group_id == category.id)
-
-      if (args.name and args.name in name) or args.item_id == item_id or is_group_match:
-        matches.append((name, item_id, group_id, category.id))
-
+    if (args.name and args.name in item.name) or args.item_id == item.id or is_group_match:
+      matches.append((item.name, item.id, item.group_id, category.id))
 
   matches.sort(key = lambda entry: entry[0])
 
