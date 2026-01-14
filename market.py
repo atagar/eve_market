@@ -753,10 +753,89 @@ EXTRA = collections.OrderedDict((
   ('Sisters Core Probe Launcher', 28758),  # Amarr buys 50/day @ 71M
 ))
 
+# Items with at least 5 trades and 1B ISK per day at Amarr or Dodixie (except
+# ships, cosmetics, and minerals).
+
+TOP_TRADE_VALUE = collections.OrderedDict((
+  ('Large Skill Injector', 40520),  # 146 trades for 137T @ Amarr, 59 trades for 72T @ Dodixie
+  ('Skill Extractor', 40519),  # 44 trades for 34B @ Amarr, 15 trades for 26T @ Dodixie
+  ('Small Skill Injector', 45635),  # 44 trades for 11B @ Amarr, 20 trades for 4.3B @ Dodixie
+  ('ORE Strip Miner', 28754),  # 22 trades for 9B @ Amarr, 6 trades for 1.6B @ Dodixie
+  ('Intact Armor Plates', 25624),  # 80 trades for 6B @ Amarr
+  ('Helium Isotopes', 16274),  # 58 trades for 5.7B @ Amarr
+  ('Helium Fuel Block', 4247),  # 65 trades for 5.6B @ Amarr
+  ('Mining Laser Efficiency Charge Blueprint', 90734),  # 5 trades for 5.1B @ Amarr
+  ('Pithum C-Type Multispectrum Shield Hardener', 4349),  # 11 trades for 3.5B @ Amarr
+  ('Pithum C-Type Medium Shield Booster', 19187),  # 21 trades for 3.4B @ Amarr
+  ('Mining Laser Efficiency Charge', 90733),  # 60 trades for 3.2B @ Amarr
+  ('Centii A-Type Multispectrum Coating', 18710),  # 14 trades for 2.9B @ Amarr
+  ('Daily Alpha Injector', 46375),  # 18 trades for 2.7B @ Amarr, 14 trades for 1.2B @ Dodixie
+  ('Sisters Expanded Probe Launcher', 28756),  # 45 trades for 2.5B @ Amarr
+  ('Compressed Clear Icicle', 28434),  # 32 trades for 2.4B @ Amarr
+  ('Thukker Large Cap Battery', 41220),  # 19 trades for 2.3B @ Amarr
+  ('Imperial Navy Heat Sink', 15810),  # 14 trades for 2.2B @ Amarr
+  ('ORE Ice Harvester', 28752),  # 9 trades for 2.1B @ Amarr
+  ('Caldari Navy Ballistic Control System', 15681),  # 18 trades for 2.1B @ Amarr
+  ('Robotics', 9848),  # 66 trades for 2.1B @ Amarr
+  ('Electro-Neural Signaller', 57450),  # 9 trades for 2.1B @ Amarr
+  ('Nano Regulation Gate', 57449),  # 6 trades for 2B @ Amarr
+  ('Neurovisual Input Matrix', 30251),  # 29 trades for 2B @ Amarr
+  ('Pith X-Type X-Large Shield Booster', 19208),  # 6 trades for 2B @ Amarr
+  ('Pith X-Type Large Shield Booster', 19207),  # 8 trades for 2B @ Amarr
+  ('Nanite Repair Paste', 28668),  # 360 trades for 1.9B @ Amarr
+  ('Medium Core Defense Field Extender II', 31796),  # 87 trades for 1.8B @ Amarr
+  ('Hydrocarbons', 16633),  # 27 trades for 1.8B @ Amarr
+  ('Republic Fleet Large Cap Battery', 41218),  # 100 trades for 1.7B @ Amarr
+  ('Dread Guristas Multispectrum Shield Hardener', 13969),  # 6 trades for 1.7B @ Amarr
+  ('Imperial Navy Multispectrum Energized Membrane', 15729),  # 24 trades for 1.7B @ Amarr
+  ('Evaporite Deposits', 16635),  # 24 trades for 1.6B @ Amarr
+  ('Large Core Defense Field Extender II', 26448),  # 10 trades for 1.6B @ Amarr
+  ('Sisters Core Probe Launcher', 28758),  # 76 trades for 1.5B @ Amarr
+  ('Syndicate Gas Cloud Scoop', 28788),  # 12 trades for 1.5B @ Amarr
+  ('Large Trimark Armor Pump II', 26302),  # 9 trades for 1.5B @ Amarr
+  ('Imperial Navy Large EMP Smartbomb', 15963),  # 7 trades for 1.5B @ Amarr
+  ('Large Capacitor Control Circuit II', 26374),  # 43 trades for 1.5B @ Amarr, 14 trades for 1.4B @ Dodixie
+  ('Corpii A-Type Multispectrum Coating', 18708),  # 6 trades for 1.5B @ Amarr
+  ('Dread Guristas Drone Damage Amplifier', 33846),  # 12 trades for 1.4B @ Amarr
+  ('Silicates', 16636),  # 21 trades for 1.4B @ Amarr
+  ('Logic Circuit', 25619),  # 162 trades for 1.4B @ Amarr
+  ('Standup Dragonfly II', 47142),  # 7 trades for 1.4B @ Amarr
+  ('Federation Navy Stasis Webifier', 17559),  # 30 trades for 1.4B @ Amarr
+  ('Cybernetic Subprocessor - Improved', 10222),  # 10 trades for 1.3B @ Amarr
+  ('Coolant', 9832),  # 35 trades for 1.3B @ Amarr
+  ('Medium Core Defense Field Purger II', 31812),  # 19 trades for 1.3B @ Amarr
+  ('Neural Boost - Improved', 10213),  # 10 trades for 1.2B @ Amarr
+  ('Tangled Power Conduit', 25594),  # 292 trades for 1.1B @ Amarr
+  ('Heavy Water', 16272),  # 138 trades for 1.1B @ Amarr
+  ('Memory Augmentation - Improved', 10209),  # 11 trades for 1.1B @ Amarr
+  ('Compressed Veldspar', 62516),  # 57 trades for 1.1B @ Amarr
+  ('Compressed Veldspar II-Grade', 62517),  # 54 trades for 1.1B @ Amarr
+  ('Medium Trimark Armor Pump II', 31059),  # 37 trades for 1.1B @ Amarr
+  ('Mobile Tractor Unit', 33475),  # 120 trades for 1.1B @ Amarr
+  ("Inherent Implants 'Highwall' Mining MX-1005", 22535),  # 7 trades for 1.1B @ Amarr
+  ("Zainou 'Beancounter' Reprocessing RX-804", 27174),  # 5 trades for 1B @ Amarr
+  ('Covert Research Tools', 33577),  # 41 trades for 1B @ Amarr
+  ('Ocular Filter - Improved', 10217),  # 10 trades for 1B @ Amarr
+  ('Enhanced Ward Console', 25625),  # 51 trades for 1B @ Amarr
+  ('Self-Harmonizing Power Core', 2872),  # 28 trades for 1B @ Amarr
+  ('Magmatic Gas', 81143),  # 10 trades for 1B @ Amarr
+  ('Imperial Navy 1600mm Steel Plates', 31900),  # 20 trades for 1B @ Amarr
+  ('Zero-Point Condensate', 48112),  # 111 trades for 1B @ Amarr
+  ('Mid-grade Crystal Epsilon', 22110),  # 5 trades for 1B @ Amarr
+  ('Modulated Strip Miner II', 17912),  # 61 trades for 1B @ Amarr
+  ('Oxygen Isotopes', 17887),  # 20 trades for 3.8B @ Dodixie
+  ('Compressed Blue Ice', 28433),  # 22 trades for 3.5B @ Dodixie
+  ('Coreli A-Type Multispectrum Coating', 18789),  # 10 trades for 1.9B @ Dodixie
+  ('Oxygen Fuel Block', 4312),  # 18 trades for 1.6B @ Dodixie
+  ('Contaminated Lorentz Fluid', 25591),  # 173 trades for 1.5B @ Dodixie
+  ('Unstable 100MN Afterburner Mutaplasmid', 47755),  # 6 trades for 1B @ Dodixie
+))
+
 
 if __name__ == '__main__':
   prices = {}  # {item => {station => price}}
-  items = MINERALS | SKILLS | FILAMENTS | DRONES | IMPLANTS | EXTRA
+  #items = MINERALS | SKILLS | FILAMENTS | DRONES | IMPLANTS | EXTRA
+  items = MINERALS | TOP_TRADE_VALUE
 
   for station_id in STATIONS.keys():
     for price in util.get_prices(station_id, items.values()):
