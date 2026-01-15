@@ -194,15 +194,14 @@ if __name__ == '__main__':
 
   all_items = {}  # mapping if item names to their identifier
 
-  groups = util.list_market_groups()
   target_group = 9  # all modules
 
   for item in util.list_items():
-    category = groups[item.group_id]
+    category = item.group
     is_group_match = target_group == category.id
 
-    while category.parent_id is not None:
-      category = groups[category.parent_id]
+    while category.parent is not None:
+      category = category.parent
       is_group_match = is_group_match or (target_group == category.id)
 
     if is_group_match:

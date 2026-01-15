@@ -30,13 +30,57 @@ STATIONS = collections.OrderedDict((
   (DODIXIE, 'Dodixie'),
 ))
 
+Item = collections.namedtuple('Item', ('id', 'name', 'group'))
+MarketGroup = collections.namedtuple('MarketGroup', ('id', 'name', 'parent'))
+
 Price = collections.namedtuple('Price', ['item', 'station', 'buy', 'sell'])
 Traffic = collections.namedtuple('Traffic', ['trades', 'volume', 'value'])
 
-Item = collections.namedtuple('Item', ('id', 'name', 'group_id'))
-MarketGroup = collections.namedtuple('MarketGroup', ('id', 'name', 'parent_id'))
+ALL_ITEMS = []  # cache of all items
+MARKET_GROUPS = {}  # cache of {group_id => (name, parent_id)}
+TRAFFIC = {}  # cache of {station_id => {item_name => Volume}}
 
-TRAFFIC = {}  # Cache of {station_id => {item_name => Volume}}
+
+def list_items():
+  """
+  Provides a list of all Items.
+
+  :returns: a **list** of Items
+  """
+
+  if not ALL_ITEMS:
+    with open(STATIC_TYPES) as static_file:
+      for line in static_file.readlines():
+        static_json = json.loads(line)
+
+        if 'marketGroupID' not in static_json:
+          continue
+
+        item_id, name, group_id = static_json['_key'], static_json['name']['en'], static_json['marketGroupID']
+        ALL_ITEMS.append(Item(item_id, name, _get_market_group(group_id)))
+
+  return list(ALL_ITEMS)
+
+
+def _get_market_group(group_id):
+  """
+  Provides the **MarketGroup** with a given identifier.
+  """
+
+  if group_id is None:
+    return None
+
+  if not MARKET_GROUPS:
+    with open(STATIC_GROUPS) as static_file:
+      for line in static_file.readlines():
+        static_json = json.loads(line)
+
+        group_id, name, parent_id = static_json['_key'], static_json['name']['en'], static_json.get('parentGroupID')
+        MARKET_GROUPS[group_id] = (name, parent_id)
+
+  name, parent_id = MARKET_GROUPS[group_id]
+
+  return MarketGroup(group_id, name, _get_market_group(parent_id))
 
 
 def get_traffic(station, item):
@@ -114,44 +158,3 @@ def _get_prices(station, items):
   if missing_items:
     for item_id in missing_items:
       yield Price(item_id, station, None, None)
-
-
-def list_items():
-  """
-  Provides a list of all Items.
-
-  :returns: a **list** of Items
-  """
-
-  items = []
-
-  with open(STATIC_TYPES) as static_file:
-    for line in static_file.readlines():
-      static_json = json.loads(line)
-
-      if 'marketGroupID' not in static_json:
-        continue
-
-      name, item_id, group_id = static_json['name']['en'], static_json['_key'], static_json['marketGroupID']
-      items.append(Item(item_id, name, group_id))
-
-  return items
-
-
-def list_market_groups():
-  """
-  Provides the mapping of market group identifiers to their MarketGroup.
-
-  :returns: a **dict** of **int** identifiers to their MarketGroup
-  """
-
-  groups = {}  # {id => MarketGroup}
-
-  with open(STATIC_GROUPS) as static_file:
-    for line in static_file.readlines():
-      static_json = json.loads(line)
-
-      name, group_id, parent_id = static_json['name']['en'], static_json['_key'], static_json.get('parentGroupID')
-      groups[group_id] = MarketGroup(group_id, name, parent_id)
-
-  return groups

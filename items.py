@@ -100,22 +100,21 @@ if __name__ == '__main__':
     sys.exit(1)
 
   items = util.list_items()
-  groups = util.list_market_groups()
 
   matches = []  # (name, item_id, group_id, category_id) tuples
 
   for item in items:
     # get this group's top parent
 
-    category = groups[item.group_id]
+    category = item.group
     is_group_match = args.group_id == category.id
 
-    while category.parent_id is not None:
-      category = groups[category.parent_id]
+    while category.parent is not None:
+      category = category.parent
       is_group_match = is_group_match or (args.group_id == category.id)
 
     if (args.name and args.name in item.name) or args.item_id == item.id or is_group_match:
-      matches.append((item.name, item.id, item.group_id, category.id))
+      matches.append((item.name, item.id, item.group.id, category.id))
 
   matches.sort(key = lambda entry: entry[0])
 
