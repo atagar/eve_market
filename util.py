@@ -23,11 +23,35 @@ STATIONS = collections.OrderedDict((
   (DODIXIE, 'Dodixie'),
 ))
 
+TRAFFIC = {}  # Cache of {station_id => {item_name => Volume}}
+
 # from https://triff.tools/api/docs/
 
 API_URL = 'https://triff.tools/api/prices/station/?station_id=%i&type_ids=%s'
 
 Price = collections.namedtuple('Price', ['item', 'station', 'buy', 'sell'])
+Traffic = collections.namedtuple('Traffic', ['trades', 'volume', 'value'])
+
+
+def get_traffic(station, item):
+  if not TRAFFIC:
+    _load_traffic()
+
+  return TRAFFIC[station].get(item)
+
+
+def _load_traffic():
+  for station_id in STATIONS.keys():
+    csv_path = 'traffic_{}.csv'.format(station_id)
+
+    if not os.path.exists(csv_path):
+      print("Missing traffic information at: {}".format(csv_path))
+      sys.exit(1)
+
+    with open(csv_path) as traffic_file:
+      for line in traffic_file.readlines():
+        item, trades, volume, value = line.rsplit(',', 3)
+        TRAFFIC.setdefault(station_id, {})[item] = Traffic(trades, volume, value)
 
 
 def get_prices(station, items):

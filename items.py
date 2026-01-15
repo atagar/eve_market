@@ -12,8 +12,11 @@ DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 10, 10, 10)]))
 LINE = '| {:<68} | {:>8} | {:>8} | {:>8} |'
 TUPLE_LINE = "  ('{}', {}),"
 
-PRICE_DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 10, 10, 15, 15, 15, 15, 15, 15)]))
-PRICE_LINE = '| {:<68} | {:>8} | {:>8} | {:>13} | {:>13} | {:>13} | {:>13} | {:>13} | {:>13} |'
+PRICE_DIV = '+{}+'.format('+'.join(['-' * width for width in (70, 15, 15, 15, 15, 15, 15, 10, 10, 10)]))
+PRICE_LINE = '| {:<68} | {:>13} | {:>13} | {:>13} | {:>13} | {:>13} | {:>13} | {:>8} | {:>8} | {:>8} |'
+
+PRICE_PRE_DIV = ' ' * 71 + '+{}+'.format('+'.join(['-' * width for width in (47, 47, 32)]))
+PRICE_PRE_LINE = '  {:<68} | {:>45} | {:>45} | {:>30} |'
 
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 STATIC_GROUPS = 'eve-online-static-data-3142455-jsonl/marketGroups.jsonl'
@@ -172,7 +175,11 @@ if __name__ == '__main__':
         prices.setdefault(price.item, {})[station_id] = price
 
   if args.prices:
-    headers = ('Item', 'ID', 'Group', 'Jita Sell', 'Amarr Sell', 'Dodixie Sell', 'Jita Buy', 'Amarr Buy', 'Dodixie Buy')
+    pre_headers = ('', 'Sell', 'Buy', 'Trades')
+    print(PRICE_PRE_DIV)
+    print(PRICE_PRE_LINE.format(*pre_headers))
+
+    headers = ('Item', 'Jita', 'Amarr', 'Dodixie', 'Jita', 'Amarr', 'Dodixie', 'Jita', 'Amarr', 'Dodixie')
 
     print(PRICE_DIV)
     print(PRICE_LINE.format(*headers))
@@ -196,7 +203,15 @@ if __name__ == '__main__':
       amarr_buy = '{:,}'.format(prices[item_id][util.AMARR].buy) if prices[item_id][util.AMARR].buy else 'N/A'
       dodixie_buy = '{:,}'.format(prices[item_id][util.DODIXIE].buy) if prices[item_id][util.DODIXIE].buy else 'N/A'
 
-      print(PRICE_LINE.format(name, item_id, group_id, jita_sell, amarr_sell, dodixie_sell, jita_buy, amarr_buy, dodixie_buy))
+      jita_traffic = util.get_traffic(util.JITA, name)
+      amarr_traffic = util.get_traffic(util.AMARR, name)
+      dodixie_traffic = util.get_traffic(util.DODIXIE, name)
+
+      jita_trades = jita_traffic.trades if jita_traffic else 'N/A'
+      amarr_trades = amarr_traffic.trades if amarr_traffic.trades else 'N/A'
+      dodixie_trades = dodixie_traffic.trades if dodixie_traffic.trades else 'N/A'
+
+      print(PRICE_LINE.format(name, jita_sell, amarr_sell, dodixie_sell, jita_buy, amarr_buy, dodixie_buy, jita_trades, amarr_trades, dodixie_trades))
     else:
       print(LINE.format(name, item_id, group_id, category_id))
 
