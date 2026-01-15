@@ -7,6 +7,13 @@ import sys
 
 import urllib.request
 
+# from https://triff.tools/api/docs/
+
+API_URL = 'https://triff.tools/api/prices/station/?station_id={}&type_ids={}'
+
+STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
+STATIC_GROUPS = 'eve-online-static-data-3142455-jsonl/marketGroups.jsonl'
+
 # from https://www.adam4eve.eu/info_stations.php
 #
 # Perimeter = 1044752365771
@@ -23,14 +30,13 @@ STATIONS = collections.OrderedDict((
   (DODIXIE, 'Dodixie'),
 ))
 
-TRAFFIC = {}  # Cache of {station_id => {item_name => Volume}}
-
-# from https://triff.tools/api/docs/
-
-API_URL = 'https://triff.tools/api/prices/station/?station_id=%i&type_ids=%s'
-
 Price = collections.namedtuple('Price', ['item', 'station', 'buy', 'sell'])
 Traffic = collections.namedtuple('Traffic', ['trades', 'volume', 'value'])
+
+Item = collections.namedtuple('Item', ('id', 'name', 'group_id'))
+MarketGroup = collections.namedtuple('MarketGroup', ('id', 'name', 'parent_id'))
+
+TRAFFIC = {}  # Cache of {station_id => {item_name => Volume}}
 
 
 def get_traffic(station, item):
@@ -66,7 +72,7 @@ def get_prices(station, items):
 
 
 def _get_prices(station, items):
-  url = API_URL % (station, ','.join(map(str, items)))
+  url = API_URL.format(station, ','.join(map(str, items)))
   cache_path = os.path.join('cache', '{}:{}'.format(station, hash('-'.join(map(str, items)))))
 
   if os.path.exists(cache_path):
@@ -108,3 +114,44 @@ def _get_prices(station, items):
   if missing_items:
     for item_id in missing_items:
       yield Price(item_id, station, None, None)
+
+
+def list_items():
+  """
+  Provides a list of all Items.
+
+  :returns: a **list** of Items
+  """
+
+  items = []
+
+  with open(STATIC_TYPES) as static_file:
+    for line in static_file.readlines():
+      static_json = json.loads(line)
+
+      if 'marketGroupID' not in static_json:
+        continue
+
+      name, item_id, group_id = static_json['name']['en'], static_json['_key'], static_json['marketGroupID']
+      items.append(Item(item_id, name, group_id))
+
+  return items
+
+
+def list_market_groups():
+  """
+  Provides the mapping of market group identifiers to their MarketGroup.
+
+  :returns: a **dict** of **int** identifiers to their MarketGroup
+  """
+
+  groups = {}  # {id => MarketGroup}
+
+  with open(STATIC_GROUPS) as static_file:
+    for line in static_file.readlines():
+      static_json = json.loads(line)
+
+      name, group_id, parent_id = static_json['name']['en'], static_json['_key'], static_json.get('parentGroupID')
+      groups[group_id] = MarketGroup(group_id, name, parent_id)
+
+  return groups

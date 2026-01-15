@@ -3,7 +3,6 @@
 import collections
 import math
 
-import items
 import util
 
 MIN_SELL = 1000000  # minimum sale value for an item to be shown
@@ -195,10 +194,10 @@ if __name__ == '__main__':
 
   all_items = {}  # mapping if item names to their identifier
 
-  groups = items.list_market_groups()
+  groups = util.list_market_groups()
   target_group = 9  # all modules
 
-  for item in items.list_items():
+  for item in util.list_items():
     category = groups[item.group_id]
     is_group_match = target_group == category.id
 

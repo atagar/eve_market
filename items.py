@@ -3,7 +3,6 @@
 import collections
 import getopt
 import os
-import json
 import sys
 
 import util
@@ -17,9 +16,6 @@ PRICE_LINE = '| {:<68} | {:>13} | {:>13} | {:>13} | {:>13} | {:>13} | {:>13} | {
 
 PRICE_PRE_DIV = ' ' * 71 + '+{}+'.format('+'.join(['-' * width for width in (47, 47, 32)]))
 PRICE_PRE_LINE = '  {:<68} | {:>45} | {:>45} | {:>30} |'
-
-STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
-STATIC_GROUPS = 'eve-online-static-data-3142455-jsonl/marketGroups.jsonl'
 
 DEFAULT_ARGS = {
   'name': None,
@@ -39,50 +35,6 @@ Lists the Eve Online items that match a criteria.
   -p, --prices    list the market's prices
   -h, --help      presents this help
 """
-
-Item = collections.namedtuple('Item', ('id', 'name', 'group_id'))
-MarketGroup = collections.namedtuple('MarketGroup', ('id', 'name', 'parent_id'))
-
-
-def list_items():
-  """
-  Provides a list of all Items.
-
-  :returns: a **list** of Items
-  """
-
-  items = []
-
-  with open(STATIC_TYPES) as static_file:
-    for line in static_file.readlines():
-      static_json = json.loads(line)
-
-      if 'marketGroupID' not in static_json:
-        continue
-
-      name, item_id, group_id = static_json['name']['en'], static_json['_key'], static_json['marketGroupID']
-      items.append(Item(item_id, name, group_id))
-
-  return items
-
-
-def list_market_groups():
-  """
-  Provides the mapping of market group identifiers to their MarketGroup.
-
-  :returns: a **dict** of **int** identifiers to their MarketGroup
-  """
-
-  groups = {}  # {id => MarketGroup}
-
-  with open(STATIC_GROUPS) as static_file:
-    for line in static_file.readlines():
-      static_json = json.loads(line)
-
-      name, group_id, parent_id = static_json['name']['en'], static_json['_key'], static_json.get('parentGroupID')
-      groups[group_id] = MarketGroup(group_id, name, parent_id)
-
-  return groups
 
 
 def parse(argv):
@@ -143,12 +95,12 @@ if __name__ == '__main__':
     print(HELP_TEXT)
     sys.exit()
 
-  if not os.path.exists(STATIC_GROUPS) or not os.path.exists(STATIC_TYPES):
+  if not os.path.exists(util.STATIC_GROUPS) or not os.path.exists(util.STATIC_TYPES):
     print('Please downdoad and extract the json from: https://developers.eveonline.com/static-data')
     sys.exit(1)
 
-  items = list_items()
-  groups = list_market_groups()
+  items = util.list_items()
+  groups = util.list_market_groups()
 
   matches = []  # (name, item_id, group_id, category_id) tuples
 
@@ -219,4 +171,3 @@ if __name__ == '__main__':
     print(PRICE_DIV)
   else:
     print(DIV)
-
