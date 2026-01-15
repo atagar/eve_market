@@ -8,6 +8,7 @@ import util
 
 MIN_SELL = 1000000  # minimum sale value for an item to be shown
 MIN_MARGIN = 50  # minimum margin for an item to be shown
+MIN_TRADES = 10  # minimum daily trades for an item to be shown
 
 DIV = '+{}+'.format('+'.join(['-' * width for width in (60, 15, 15, 15, 30, 30)]))
 LINE = '| {:<58} | {:>13} | {:>13} | {:>13} | {:>28} | {:>28} |'
@@ -853,8 +854,12 @@ if __name__ == '__main__':
       continue  # item with a shortage tend to be too obscure
 
     margin = int((sell_at.sell - buy_from.sell) / buy_from.sell * 100) if (buy_from.sell and sell_at.sell) else None
+    traffic = util.get_traffic(sell_at.station, item_name)
 
-    if margin >= MIN_MARGIN and sell_at.sell >= MIN_SELL:
+    if not traffic:
+      continue
+
+    if margin >= MIN_MARGIN and sell_at.sell >= MIN_SELL and traffic.trades >= MIN_TRADES:
       lines.append((item_name, item_id, buy_from, sell_at, margin))
 
   lines.sort(key = lambda entry: entry[4] if entry[4] is not None else -1, reverse = True)

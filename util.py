@@ -51,7 +51,7 @@ def _load_traffic():
     with open(csv_path) as traffic_file:
       for line in traffic_file.readlines():
         item, trades, volume, value = line.rsplit(',', 3)
-        TRAFFIC.setdefault(station_id, {})[item] = Traffic(trades, volume, value)
+        TRAFFIC.setdefault(station_id, {})[item] = Traffic(int(trades), int(volume), int(value))
 
 
 def get_prices(station, items):
