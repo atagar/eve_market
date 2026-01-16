@@ -99,30 +99,27 @@ if __name__ == '__main__':
     print('Please downdoad and extract the json from: https://developers.eveonline.com/static-data')
     sys.exit(1)
 
-  items = util.list_items()
+  matches = []
 
-  matches = []  # (name, item_id, group_id, category_id) tuples
+  for item in util.list_items():
+    if (args.name and args.name in item.name) or args.item_id == item.id:
+      matches.append(item)
+    elif args.group_id:
+      market_group = item.group
 
-  for item in items:
-    # get this group's top parent
+      while market_group:
+        if market_group.id == args.group_id:
+          matches.append(item)
 
-    category = item.group
-    is_group_match = args.group_id == category.id
+      market_group = market_group.parent
 
-    while category.parent is not None:
-      category = category.parent
-      is_group_match = is_group_match or (args.group_id == category.id)
-
-    if (args.name and args.name in item.name) or args.item_id == item.id or is_group_match:
-      matches.append((item.name, item.id, item.group.id, category.id))
-
-  matches.sort(key = lambda entry: entry[0])
+  matches.sort(key = lambda item: item.name)
 
   prices = {}
 
   if args.prices:
     for station_id in util.STATIONS.keys():
-      for price in util.get_prices(station_id, [m[1] for m in matches]):
+      for price in util.get_prices(station_id, [item.id for item in matches]):
         prices.setdefault(price.item, {})[station_id] = price
 
   if args.prices:
@@ -142,29 +139,34 @@ if __name__ == '__main__':
     print(LINE.format(*headers))
     print(DIV)
 
-  for name, item_id, group_id, category_id in matches:
+  for item in matches:
     if args.print_tuple:
-      print(TUPLE_LINE.format(name, item_id))
+      print(TUPLE_LINE.format(item.name, item.id))
     elif args.prices:
-      jita_sell = '{:,}'.format(prices[item_id][util.JITA].sell) if prices[item_id][util.JITA].sell else 'N/A'
-      amarr_sell = '{:,}'.format(prices[item_id][util.AMARR].sell) if prices[item_id][util.AMARR].sell else 'N/A'
-      dodixie_sell = '{:,}'.format(prices[item_id][util.DODIXIE].sell) if prices[item_id][util.DODIXIE].sell else 'N/A'
+      jita_sell = '{:,}'.format(prices[item.id][util.JITA].sell) if prices[item.id][util.JITA].sell else 'N/A'
+      amarr_sell = '{:,}'.format(prices[item.id][util.AMARR].sell) if prices[item.id][util.AMARR].sell else 'N/A'
+      dodixie_sell = '{:,}'.format(prices[item.id][util.DODIXIE].sell) if prices[item.id][util.DODIXIE].sell else 'N/A'
 
-      jita_buy = '{:,}'.format(prices[item_id][util.JITA].buy) if prices[item_id][util.JITA].buy else 'N/A'
-      amarr_buy = '{:,}'.format(prices[item_id][util.AMARR].buy) if prices[item_id][util.AMARR].buy else 'N/A'
-      dodixie_buy = '{:,}'.format(prices[item_id][util.DODIXIE].buy) if prices[item_id][util.DODIXIE].buy else 'N/A'
+      jita_buy = '{:,}'.format(prices[item.id][util.JITA].buy) if prices[item.id][util.JITA].buy else 'N/A'
+      amarr_buy = '{:,}'.format(prices[item.id][util.AMARR].buy) if prices[item.id][util.AMARR].buy else 'N/A'
+      dodixie_buy = '{:,}'.format(prices[item.id][util.DODIXIE].buy) if prices[item.id][util.DODIXIE].buy else 'N/A'
 
-      jita_traffic = util.get_traffic(util.JITA, name)
-      amarr_traffic = util.get_traffic(util.AMARR, name)
-      dodixie_traffic = util.get_traffic(util.DODIXIE, name)
+      jita_traffic = util.get_traffic(util.JITA, item.name)
+      amarr_traffic = util.get_traffic(util.AMARR, item.name)
+      dodixie_traffic = util.get_traffic(util.DODIXIE, item.name)
 
       jita_trades = jita_traffic.trades if jita_traffic else 'N/A'
-      amarr_trades = amarr_traffic.trades if amarr_traffic.trades else 'N/A'
-      dodixie_trades = dodixie_traffic.trades if dodixie_traffic.trades else 'N/A'
+      amarr_trades = amarr_traffic.trades if amarr_traffic else 'N/A'
+      dodixie_trades = dodixie_traffic.trades if dodixie_traffic else 'N/A'
 
-      print(PRICE_LINE.format(name, jita_sell, amarr_sell, dodixie_sell, jita_buy, amarr_buy, dodixie_buy, jita_trades, amarr_trades, dodixie_trades))
+      print(PRICE_LINE.format(item.name, jita_sell, amarr_sell, dodixie_sell, jita_buy, amarr_buy, dodixie_buy, jita_trades, amarr_trades, dodixie_trades))
     else:
-      print(LINE.format(name, item_id, group_id, category_id))
+      category = item.group
+
+      while category.parent is not None:
+        category = category.parent
+
+      print(LINE.format(item.name, item.id, item.group.id, category.id))
 
   if args.prices:
     print(PRICE_DIV)

@@ -197,15 +197,14 @@ if __name__ == '__main__':
   target_group = 9  # all modules
 
   for item in util.list_items():
-    category = item.group
-    is_group_match = target_group == category.id
+    market_group = item.group
 
-    while category.parent is not None:
-      category = category.parent
-      is_group_match = is_group_match or (target_group == category.id)
+    while market_group:
+      if market_group.id == target_group:
+        all_items[item.name] = item.id
+        break
 
-    if is_group_match:
-      all_items[item.name] = item.id
+      market_group = market_group.parent
 
   for station_id in util.STATIONS.keys():
     for price in util.get_prices(station_id, all_items.values()):
