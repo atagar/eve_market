@@ -36,7 +36,7 @@ MarketGroup = collections.namedtuple('MarketGroup', ('id', 'name', 'parent'))
 Price = collections.namedtuple('Price', ['item', 'station', 'buy', 'sell'])
 Traffic = collections.namedtuple('Traffic', ['trades', 'volume', 'value'])
 
-ALL_ITEMS = []  # cache of all items
+ALL_ITEMS = {}  # cache of {item_id => item}
 MARKET_GROUPS = {}  # cache of {group_id => (name, parent_id)}
 TRAFFIC = {}  # cache of {station_id => {item_name => Volume}}
 
@@ -57,9 +57,9 @@ def list_items():
           continue
 
         item_id, name, group_id = static_json['_key'], static_json['name']['en'], static_json['marketGroupID']
-        ALL_ITEMS.append(Item(item_id, name, _get_market_group(group_id)))
+        ALL_ITEMS[item_id] = Item(item_id, name, _get_market_group(group_id))
 
-  return list(ALL_ITEMS)
+  return list(ALL_ITEMS.values())
 
 
 def _get_market_group(group_id):
