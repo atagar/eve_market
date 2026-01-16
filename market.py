@@ -220,7 +220,7 @@ if __name__ == '__main__':
       continue  # item with a shortage tend to be too obscure
 
     margin = int((sell_at.sell - buy_from.sell) / buy_from.sell * 100) if (buy_from.sell and sell_at.sell) else None
-    traffic = util.get_traffic(sell_at.station, item_name)
+    traffic = util.get_traffic(sell_at.station, item_id)
 
     if not traffic:
       continue

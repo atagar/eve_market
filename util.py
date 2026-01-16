@@ -38,7 +38,7 @@ Traffic = collections.namedtuple('Traffic', ['trades', 'volume', 'value'])
 
 ALL_ITEMS = {}  # cache of {item_id => item}
 MARKET_GROUPS = {}  # cache of {group_id => (name, parent_id)}
-TRAFFIC = {}  # cache of {station_id => {item_name => Volume}}
+TRAFFIC = {}  # cache of {station_id => {item_id => Volume}}
 
 
 def list_items():
@@ -100,8 +100,8 @@ def _load_traffic():
 
     with open(csv_path) as traffic_file:
       for line in traffic_file.readlines():
-        item, trades, volume, value = line.rsplit(',', 3)
-        TRAFFIC.setdefault(station_id, {})[item] = Traffic(int(trades), int(volume), int(value))
+        item_id, trades, volume, value = line.rsplit(',', 3)
+        TRAFFIC.setdefault(station_id, {})[int(item_id)] = Traffic(int(trades), int(volume), int(value))
 
 
 def get_prices(station, items):

@@ -151,9 +151,9 @@ if __name__ == '__main__':
       amarr_buy = '{:,}'.format(prices[item.id][util.AMARR].buy) if prices[item.id][util.AMARR].buy else 'N/A'
       dodixie_buy = '{:,}'.format(prices[item.id][util.DODIXIE].buy) if prices[item.id][util.DODIXIE].buy else 'N/A'
 
-      jita_traffic = util.get_traffic(util.JITA, item.name)
-      amarr_traffic = util.get_traffic(util.AMARR, item.name)
-      dodixie_traffic = util.get_traffic(util.DODIXIE, item.name)
+      jita_traffic = util.get_traffic(util.JITA, item.id)
+      amarr_traffic = util.get_traffic(util.AMARR, item.id)
+      dodixie_traffic = util.get_traffic(util.DODIXIE, item.id)
 
       jita_trades = jita_traffic.trades if jita_traffic else 'N/A'
       amarr_trades = amarr_traffic.trades if amarr_traffic else 'N/A'
