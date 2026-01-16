@@ -143,21 +143,21 @@ if __name__ == '__main__':
     if args.print_tuple:
       print(TUPLE_LINE.format(item.name, item.id))
     elif args.prices:
-      jita_sell = '{:,}'.format(prices[item.id][util.JITA].sell) if prices[item.id][util.JITA].sell else 'N/A'
-      amarr_sell = '{:,}'.format(prices[item.id][util.AMARR].sell) if prices[item.id][util.AMARR].sell else 'N/A'
-      dodixie_sell = '{:,}'.format(prices[item.id][util.DODIXIE].sell) if prices[item.id][util.DODIXIE].sell else 'N/A'
+      jita_price = prices[item.id][util.JITA]
+      amarr_price = prices[item.id][util.AMARR]
+      dodixie_price = prices[item.id][util.DODIXIE]
 
-      jita_buy = '{:,}'.format(prices[item.id][util.JITA].buy) if prices[item.id][util.JITA].buy else 'N/A'
-      amarr_buy = '{:,}'.format(prices[item.id][util.AMARR].buy) if prices[item.id][util.AMARR].buy else 'N/A'
-      dodixie_buy = '{:,}'.format(prices[item.id][util.DODIXIE].buy) if prices[item.id][util.DODIXIE].buy else 'N/A'
+      jita_sell = '{:,}'.format(jita_price.sell) if jita_price.sell else 'N/A'
+      amarr_sell = '{:,}'.format(amarr_price.sell) if amarr_price.sell else 'N/A'
+      dodixie_sell = '{:,}'.format(dodixie_price.sell) if dodixie_price.sell else 'N/A'
 
-      jita_traffic = util.get_traffic(util.JITA, item.id)
-      amarr_traffic = util.get_traffic(util.AMARR, item.id)
-      dodixie_traffic = util.get_traffic(util.DODIXIE, item.id)
+      jita_buy = '{:,}'.format(jita_price.buy) if jita_price.buy else 'N/A'
+      amarr_buy = '{:,}'.format(amarr_price.buy) if amarr_price.buy else 'N/A'
+      dodixie_buy = '{:,}'.format(dodixie_price.buy) if dodixie_price.buy else 'N/A'
 
-      jita_trades = jita_traffic.trades if jita_traffic else 'N/A'
-      amarr_trades = amarr_traffic.trades if amarr_traffic else 'N/A'
-      dodixie_trades = dodixie_traffic.trades if dodixie_traffic else 'N/A'
+      jita_trades = jita_price.trades if jita_price.trades else 'N/A'
+      amarr_trades = amarr_price.trades if amarr_price.trades else 'N/A'
+      dodixie_trades = dodixie_price.trades if dodixie_price.trades else 'N/A'
 
       print(PRICE_LINE.format(item.name, jita_sell, amarr_sell, dodixie_sell, jita_buy, amarr_buy, dodixie_buy, jita_trades, amarr_trades, dodixie_trades))
     else:

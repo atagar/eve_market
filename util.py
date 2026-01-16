@@ -32,13 +32,11 @@ STATIONS = collections.OrderedDict((
 
 Item = collections.namedtuple('Item', ('id', 'name', 'group'))
 MarketGroup = collections.namedtuple('MarketGroup', ('id', 'name', 'parent'))
-
-Price = collections.namedtuple('Price', ['item', 'station', 'buy', 'sell'])
-Traffic = collections.namedtuple('Traffic', ['trades', 'volume', 'value'])
+Price = collections.namedtuple('Price', ['item', 'station', 'buy', 'sell', 'trades', 'volume', 'value'])
 
 ALL_ITEMS = {}  # cache of {item_id => item}
 MARKET_GROUPS = {}  # cache of {group_id => (name, parent_id)}
-TRAFFIC = {}  # cache of {station_id => {item_id => Volume}}
+TRAFFIC = {}  # cache of {station_id => {item_id => (trades, volume, value)}}
 
 
 def list_items():
@@ -83,13 +81,6 @@ def _get_market_group(group_id):
   return MarketGroup(group_id, name, _get_market_group(parent_id))
 
 
-def get_traffic(station, item):
-  if not TRAFFIC:
-    _load_traffic()
-
-  return TRAFFIC[station].get(item)
-
-
 def _load_traffic():
   for station_id in STATIONS.keys():
     csv_path = 'traffic_{}.csv'.format(station_id)
@@ -101,7 +92,7 @@ def _load_traffic():
     with open(csv_path) as traffic_file:
       for line in traffic_file.readlines():
         item_id, trades, volume, value = line.rsplit(',', 3)
-        TRAFFIC.setdefault(station_id, {})[int(item_id)] = Traffic(int(trades), int(volume), int(value))
+        TRAFFIC.setdefault(station_id, {})[int(item_id)] = (int(trades), int(volume), int(value))
 
 
 def get_prices(station, items):
@@ -116,6 +107,9 @@ def get_prices(station, items):
 
 
 def _get_prices(station, items):
+  if not TRAFFIC:
+    _load_traffic()
+
   url = API_URL.format(station, ','.join(map(str, items)))
   cache_path = os.path.join('cache', '{}:{}'.format(station, hash('-'.join(map(str, items)))))
 
@@ -152,9 +146,16 @@ def _get_prices(station, items):
     else:
       sell_price = float(item['sell_min'])
 
-    missing_items.remove(int(item['type_id']))
-    yield Price(int(item['type_id']), int(item['station_id']), buy_price, sell_price)
+    item_id = int(item['type_id'])
+
+    if item_id in TRAFFIC[station]:
+      trades, volume, value = TRAFFIC[station][item_id]
+    else:
+      trades, volume, value = None, None, None
+
+    missing_items.remove(item_id)
+    yield Price(item_id, int(item['station_id']), buy_price, sell_price, trades, volume, value)
 
   if missing_items:
     for item_id in missing_items:
-      yield Price(item_id, station, None, None)
+      yield Price(item_id, station, None, None, None, None, None)
