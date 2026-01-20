@@ -15,10 +15,6 @@ STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 STATIC_GROUPS = 'eve-online-static-data-3142455-jsonl/marketGroups.jsonl'
 
 # from https://www.adam4eve.eu/info_stations.php
-#
-# Perimeter = 1044752365771
-# Ashab = 1044857068649
-# Botane = 1044961079041
 
 JITA = 60003760
 AMARR = 60008494
@@ -29,6 +25,19 @@ STATIONS = collections.OrderedDict((
   (AMARR, 'Amarr'),
   (DODIXIE, 'Dodixie'),
 ))
+
+# buy orders are often at a tax haven instead
+
+TAX_HAVENS = {
+  JITA: [
+    1044752365771,  # Perimeter - 0.0% Neutral States Market HQ
+    1038069922162,  # Perimeter - Tranquilty Trading Tower
+  ], AMARR: [
+    1044857068649,  # Ashab - 0.4% Market Cheaper than AMARR
+  ], DODIXIE: [
+    1044961079041,  # Botane - Cheapest Market BE SMART 0.3%
+  ],
+}
 
 Item = collections.namedtuple('Item', ('id', 'name', 'group'))
 MarketGroup = collections.namedtuple('MarketGroup', ('id', 'name', 'parent'))
@@ -101,9 +110,27 @@ def get_prices(station, items):
 
   items = list(items)
 
+  prices = []
+  tax_haven_price = {}  # item id => max buy price
+
   for i in range(0, len(items), 320):
-    for price in _get_prices(station, items[i:i + 320]):
-      yield price
+    prices += _get_prices(station, items[i:i + 320])
+
+    # TODO: The triff.tools API doen't provide data for POS (responses are
+    # empty). Maybe we can do this if/when we call an official CCP API?
+
+    # for tax_haven in TAX_HAVENS.get(station, []):
+    #   for price in _get_prices(tax_haven, items[i:i + 320]):
+    #     if price.buy:
+    #       tax_haven_price[price.item] = max(tax_haven_price.get(price.item, 0), price.buy)
+
+  for price in prices:
+    if price.buy is None:
+      buy_price = tax_haven_price.get(price.item, None)
+    else:
+      buy_price = max(price.buy, tax_haven_price.get(price.item, 0))
+
+    yield Price(price.item, price.station, buy_price, price.sell, price.trades, price.volume, price.value)
 
 
 def _get_prices(station, items):
