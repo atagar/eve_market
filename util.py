@@ -147,8 +147,10 @@ def _get_prices(station, items):
     if not os.path.exists('cache'):
       os.makedirs('cache')
 
+    api_request = urllib.request.Request(url, headers = {'User-Agent': 'Python'})
+
     try:
-      prices_json = json.loads(urllib.request.urlopen(url).read())['rows']
+      prices_json = json.loads(urllib.request.urlopen(api_request).read())['rows']
     except:
       print("Unable to download from '{}': {}".format(url, sys.exc_info()[1]))
       sys.exit(1)
