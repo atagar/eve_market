@@ -116,13 +116,10 @@ def get_prices(station, items):
   for i in range(0, len(items), 320):
     prices += _get_prices(station, items[i:i + 320])
 
-    # TODO: The triff.tools API doen't provide data for POS (responses are
-    # empty). Maybe we can do this if/when we call an official CCP API?
-
-    # for tax_haven in TAX_HAVENS.get(station, []):
-    #   for price in _get_prices(tax_haven, items[i:i + 320]):
-    #     if price.buy:
-    #       tax_haven_price[price.item] = max(tax_haven_price.get(price.item, 0), price.buy)
+    for tax_haven in TAX_HAVENS.get(station, []):
+      for price in _get_prices(tax_haven, items[i:i + 320]):
+        if price.buy:
+          tax_haven_price[price.item] = max(tax_haven_price.get(price.item, 0), price.buy)
 
   for price in prices:
     if price.buy is None:
@@ -161,11 +158,11 @@ def _get_prices(station, items):
   missing_items = list(items)
 
   for item in prices_json:
-    buy_price = float(item['buy']['best'])
-    sell_price = float(item['sell']['best'])
-    item_id = int(item['type_id'])
+    buy_price = item['buy']['best']
+    sell_price = item['sell']['best']
+    item_id = item['type_id']
 
-    if item_id in TRAFFIC[station]:
+    if item_id in TRAFFIC.get(station, []):
       trades, volume, value = TRAFFIC[station][item_id]
     else:
       trades, volume, value = None, None, None
