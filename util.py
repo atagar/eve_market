@@ -9,7 +9,7 @@ import urllib.request
 
 # from https://triff.tools/api/docs/
 
-API_URL = 'https://triff.tools/api/prices/station/?station_id={}&type_ids={}'
+API_URL = 'https://triff.tools/api/market/quote/?station_id={}&type_ids={}'
 
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 STATIC_GROUPS = 'eve-online-static-data-3142455-jsonl/marketGroups.jsonl'
@@ -150,7 +150,7 @@ def _get_prices(station, items):
     api_request = urllib.request.Request(url, headers = {'User-Agent': 'Python'})
 
     try:
-      prices_json = json.loads(urllib.request.urlopen(api_request).read())['rows']
+      prices_json = json.loads(urllib.request.urlopen(api_request).read())['types']
     except:
       print("Unable to download from '{}': {}".format(url, sys.exc_info()[1]))
       sys.exit(1)
@@ -161,20 +161,8 @@ def _get_prices(station, items):
   missing_items = list(items)
 
   for item in prices_json:
-    if item['buy_max'] is None:
-      buy_price = None
-    elif item['buy_max'].isdigit():
-      buy_price = int(item['buy_max'])
-    else:
-      buy_price = float(item['buy_max'])
-
-    if item['sell_min'] is None:
-      sell_price = None
-    elif item['sell_min'].isdigit():
-      sell_price = int(item['sell_min'])
-    else:
-      sell_price = float(item['sell_min'])
-
+    buy_price = float(item['buy']['best'])
+    sell_price = float(item['sell']['best'])
     item_id = int(item['type_id'])
 
     if item_id in TRAFFIC[station]:
@@ -183,7 +171,7 @@ def _get_prices(station, items):
       trades, volume, value = None, None, None
 
     missing_items.remove(item_id)
-    yield Price(item_id, int(item['station_id']), buy_price, sell_price, trades, volume, value)
+    yield Price(item_id, station, buy_price, sell_price, trades, volume, value)
 
   if missing_items:
     for item_id in missing_items:
