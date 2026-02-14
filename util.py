@@ -158,8 +158,6 @@ def _get_prices(station, items):
   missing_items = list(items)
 
   for item in prices_json:
-    buy_price = item['buy']['best']
-    sell_price = item['sell']['best']
     item_id = item['type_id']
 
     if item_id in TRAFFIC.get(station, []):
@@ -168,7 +166,7 @@ def _get_prices(station, items):
       trades, volume, value = None, None, None
 
     missing_items.remove(item_id)
-    yield Price(item_id, station, buy_price, sell_price, trades, volume, value)
+    yield Price(item_id, station, item['buy']['best'], item['sell']['best'], trades, volume, value)
 
   if missing_items:
     for item_id in missing_items:
