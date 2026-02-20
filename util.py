@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import collections
+import hashlib
 import json
 import os
 import sys
@@ -134,8 +135,10 @@ def _get_prices(station, items):
   if not TRAFFIC:
     _load_traffic()
 
+  items_hash = hashlib.sha256('-'.join(map(str, items)).encode('utf-8')).hexdigest()
+
   url = API_URL.format(station, ','.join(map(str, items)))
-  cache_path = os.path.join('cache', '{}:{}'.format(station, hash('-'.join(map(str, items)))))
+  cache_path = os.path.join('cache', '{}:{}'.format(station, items_hash))
 
   if os.path.exists(cache_path):
     with open(cache_path) as cache_file:
