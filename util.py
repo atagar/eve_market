@@ -11,9 +11,12 @@ import urllib.request
 # from https://triff.tools/api/docs/
 
 API_URL = 'https://triff.tools/api/market/quote/?station_id={}&type_ids={}'
+TRAFFIC_API_URL = 'https://triff.tools/api/market/history/batch?region_id={}&type_ids={}'
 
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 STATIC_GROUPS = 'eve-online-static-data-3142455-jsonl/marketGroups.jsonl'
+
+USE_TRIFF_TRAFFIC_API = False
 
 # from https://www.adam4eve.eu/info_stations.php
 
@@ -26,6 +29,14 @@ STATIONS = collections.OrderedDict((
   (AMARR, 'Amarr'),
   (DODIXIE, 'Dodixie'),
 ))
+
+# from https://www.adam4eve.eu/info_locations.php
+
+REGIONS = {
+  JITA: 10000002,     # The Forge
+  AMARR: 10000043,    # Domain
+  DODIXIE: 10000032,  # Sinq Laison
+}
 
 # buy orders are often at a tax haven instead
 
@@ -91,6 +102,61 @@ def _get_market_group(group_id):
   return MarketGroup(group_id, name, _get_market_group(parent_id))
 
 
+def get_traffic(station, items):
+  """
+  Provides a **dict** of item IDs to a (trades, volume, value) tuple.
+  """
+
+  items = list(items)
+  item_traffic = {}
+
+  # this API can fetch 50 items at a time
+
+  for i in range(0, len(items), 50):
+    item_traffic.update(_get_traffic(station, items[i:i + 50]))
+
+  return item_traffic
+
+
+def _get_traffic(station, items):
+  items_hash = hashlib.sha256('-'.join(map(str, items)).encode('utf-8')).hexdigest()
+
+  url = TRAFFIC_API_URL.format(REGIONS[station], ','.join(map(str, items)))
+  cache_path = os.path.join('cache', 'traffic-{}:{}'.format(station, items_hash))
+  item_traffic = {}
+
+  if os.path.exists(cache_path):
+    with open(cache_path) as cache_file:
+      traffic_json = json.loads(cache_file.read())
+  else:
+    if not os.path.exists('cache'):
+      os.makedirs('cache')
+
+    api_request = urllib.request.Request(url, headers = {'User-Agent': 'Python'})
+
+    try:
+      traffic_json = json.loads(urllib.request.urlopen(api_request).read())['data']
+    except:
+      print("Unable to download from '{}': {}".format(url, sys.exc_info()[1]))
+      sys.exit(1)
+
+    with open(cache_path, 'w') as cache_file:
+      cache_file.write(json.dumps(traffic_json, indent = 2))
+
+  for item_id, data in traffic_json.items():
+    data = data[-7:]  # trim to this week
+
+    avg_price = float(data[0]['avg_price'])
+
+    trades = int(sum([int(d['orders']) for d in data]) / 7)
+    volume = int(sum([int(d['volume']) for d in data]) / 7)
+    value = int(avg_price * volume)
+
+    item_traffic[int(item_id)] = (trades, volume, value)
+
+  return item_traffic
+
+
 def _load_traffic():
   for station_id in STATIONS.keys():
     csv_path = 'traffic_{}.csv'.format(station_id)
@@ -132,7 +198,7 @@ def get_prices(station, items):
 
 
 def _get_prices(station, items):
-  if not TRAFFIC:
+  if not TRAFFIC and not USE_TRIFF_TRAFFIC_API:
     _load_traffic()
 
   items_hash = hashlib.sha256('-'.join(map(str, items)).encode('utf-8')).hexdigest()
@@ -160,11 +226,18 @@ def _get_prices(station, items):
 
   missing_items = list(items)
 
+  if station not in STATIONS:
+    item_traffic = {}  # tax havens won't need traffic data
+  elif USE_TRIFF_TRAFFIC_API:
+    item_traffic = get_traffic(station, items)
+  else:
+    item_traffic = TRAFFIC[station]
+
   for item in prices_json:
     item_id = item['type_id']
 
-    if item_id in TRAFFIC.get(station, []):
-      trades, volume, value = TRAFFIC[station][item_id]
+    if item_id in item_traffic:
+      trades, volume, value = item_traffic[item_id]
     else:
       trades, volume, value = None, None, None
 
