@@ -5,13 +5,17 @@ import hashlib
 import json
 import os
 import sys
+import time
 
 import urllib.request
 
+CACHE_DIR = os.path.join(os.path.dirname(__file__), 'cache')
+CACHE_DURATION = 60 * 60 * 12  # invalidate cached content after twelve hours
+
 # from https://triff.tools/api/docs/
 
-API_URL = 'https://triff.tools/api/market/quote/?station_id={}&type_ids={}'
-TRAFFIC_API_URL = 'https://triff.tools/api/market/history/batch?region_id={}&type_ids={}'
+MARKET_URL = 'https://triff.tools/api/market/quote/?station_id={}&type_ids={}'
+TRAFFIC_URL = 'https://triff.tools/api/market/history/batch?region_id={}&type_ids={}'
 
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 STATIC_GROUPS = 'eve-online-static-data-3142455-jsonl/marketGroups.jsonl'
@@ -119,19 +123,10 @@ def get_traffic(station, items):
 
 
 def _get_traffic(station, items):
-  items_hash = hashlib.sha256('-'.join(map(str, items)).encode('utf-8')).hexdigest()
+  traffic_json = _get_cache('traffic', station, items)
 
-  url = TRAFFIC_API_URL.format(REGIONS[station], ','.join(map(str, items)))
-  cache_path = os.path.join('cache', 'traffic-{}:{}'.format(station, items_hash))
-  item_traffic = {}
-
-  if os.path.exists(cache_path):
-    with open(cache_path) as cache_file:
-      traffic_json = json.loads(cache_file.read())
-  else:
-    if not os.path.exists('cache'):
-      os.makedirs('cache')
-
+  if not traffic_json:
+    url = TRAFFIC_URL.format(REGIONS[station], ','.join(map(str, items)))
     api_request = urllib.request.Request(url, headers = {'User-Agent': 'Python'})
 
     try:
@@ -140,8 +135,9 @@ def _get_traffic(station, items):
       print("Unable to download from '{}': {}".format(url, sys.exc_info()[1]))
       sys.exit(1)
 
-    with open(cache_path, 'w') as cache_file:
-      cache_file.write(json.dumps(traffic_json, indent = 2))
+    _set_cache('traffic', station, items, traffic_json)
+
+  item_traffic = {}
 
   for item_id, data in traffic_json.items():
     data = data[-7:]  # trim to this week
@@ -201,18 +197,10 @@ def _get_prices(station, items):
   if not TRAFFIC and not USE_TRIFF_TRAFFIC_API:
     _load_traffic()
 
-  items_hash = hashlib.sha256('-'.join(map(str, items)).encode('utf-8')).hexdigest()
+  prices_json = _get_cache('market', station, items)
 
-  url = API_URL.format(station, ','.join(map(str, items)))
-  cache_path = os.path.join('cache', '{}:{}'.format(station, items_hash))
-
-  if os.path.exists(cache_path):
-    with open(cache_path) as cache_file:
-      prices_json = json.loads(cache_file.read())
-  else:
-    if not os.path.exists('cache'):
-      os.makedirs('cache')
-
+  if not prices_json:
+    url = MARKET_URL.format(station, ','.join(map(str, items)))
     api_request = urllib.request.Request(url, headers = {'User-Agent': 'Python'})
 
     try:
@@ -221,8 +209,7 @@ def _get_prices(station, items):
       print("Unable to download from '{}': {}".format(url, sys.exc_info()[1]))
       sys.exit(1)
 
-    with open(cache_path, 'w') as cache_file:
-      cache_file.write(json.dumps(prices_json, indent = 2))
+    _set_cache('market', station, items, prices_json)
 
   missing_items = list(items)
 
@@ -247,3 +234,35 @@ def _get_prices(station, items):
   if missing_items:
     for item_id in missing_items:
       yield Price(item_id, station, None, None, None, None, None)
+
+
+def _get_cache(topic, station, items):
+  """
+  Provides this query's cache. **None** if unavailable or expired.
+  """
+
+  items_hash = hashlib.sha256('-'.join(map(str, items)).encode('utf-8')).hexdigest()
+  cache_path = os.path.join(CACHE_DIR, '{}-{}:{}'.format(topic, station, items_hash))
+
+  if not os.path.exists(cache_path):
+    return None  # nothing is cached
+  elif (time.time() - os.path.getmtime(cache_path)) > CACHE_DURATION:
+    return None  # cache expired
+  else:
+    with open(cache_path) as cache_file:
+      return json.loads(cache_file.read())
+
+
+def _set_cache(topic, station, items, query_json):
+  """
+  Cache to avoid duplicate queries.
+  """
+
+  items_hash = hashlib.sha256('-'.join(map(str, items)).encode('utf-8')).hexdigest()
+  cache_path = os.path.join(CACHE_DIR, '{}-{}:{}'.format(topic, station, items_hash))
+
+  if not os.path.exists(CACHE_DIR):
+    os.makedirs(CACHE_DIR)
+
+  with open(cache_path, 'w') as cache_file:
+    cache_file.write(json.dumps(query_json, indent = 2))
