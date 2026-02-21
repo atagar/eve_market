@@ -20,7 +20,7 @@ TRAFFIC_URL = 'https://triff.tools/api/market/history/batch?region_id={}&type_id
 STATIC_TYPES = 'eve-online-static-data-3142455-jsonl/types.jsonl'
 STATIC_GROUPS = 'eve-online-static-data-3142455-jsonl/marketGroups.jsonl'
 
-USE_TRIFF_TRAFFIC_API = False
+USE_TRIFF_TRAFFIC_API = True
 
 # from https://www.adam4eve.eu/info_stations.php
 
